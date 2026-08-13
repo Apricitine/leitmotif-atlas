@@ -11,7 +11,7 @@ export const songs = [
   { id: "the-legend", title: "The Legend", chapter: 1 },
   { id: "the-door", title: "The Door", chapter: 1 },
   { id: "chase", title: "Chase", chapter: 1 },
-  { id: "once-upon-a-time", title: "Once Upon a Time", chapter: 6 },
+  { id: "once-upon-a-time", title: "Once Upon a Time", chapter: 8 },
   { id: "before-the-story", title: "Before the Story", chapter: 2 },
   { id: "the-world-revolving", title: "The World Revolving", chapter: 1 },
   { id: "dialtone", title: "Dialtone", chapter: 2 },
@@ -68,7 +68,7 @@ export const songs = [
   { id: "sound-studio", title: "Sound Studio", chapter: 2 },
   { id: "berdly", title: "Berdly", chapter: 2 },
   { id: "smart-race", title: "Smart Race", chapter: 2 },
-  { id: "faint-courage-game-over", title: "Faint Courage (Game Over)", chapter: 2 },
+  { id: "faint-courage", title: "Faint Courage (Game Over)", chapter: 2 },
   { id: "welcome-to-the-city", title: "WELCOME TO THE CITY", chapter: 2 },
   { id: "mini-studio", title: "Mini Studio", chapter: 2 },
   { id: "holiday-studio", title: "Holiday Studio", chapter: 2 },
@@ -207,6 +207,11 @@ export const songs = [
   { id: "walking-home", title: "Walking Home", chapter: 5 },
   { id: "field-of-hopes-and-dreams-credits-version", title: "Field of Hopes and Dreams (Credits Version)", chapter: 5 },
   { id: "goodnight-sweet-prince", title: "Goodnight, Sweet Prince", chapter: 5 },
+  { id: "him", title: "Gaster's Theme", chapter: 8 },
+  { id: "determination", title: "Determination", chapter: 8 },
+  { id: "asgore", title: "ASGORE", chapter: 8 },
+  { id: "your-best-nightmare", title: "YOUR BEST NIGHTMARE", chapter: 8 }
+
 ]
 
 export const motifs = [
@@ -231,7 +236,10 @@ export const motifs = [
       "another-day-in-hometown",
       "school",
       "castle-funk",
-      "dark-sanctuary"
+      "dark-sanctuary",
+      "festival",
+      "i-guess-im-in-love",
+      "the-diner-song-of-best-friends"
     ]
   },
   {
@@ -255,7 +263,8 @@ export const motifs = [
       "chase",
       "the-door",
       "the-world-revolving",
-      "black-knife"
+      "black-knife",
+      "that-day"
     ]
   },
   {
@@ -267,7 +276,11 @@ export const motifs = [
       "dialtone",
       "the-world-revolving",
       "the-circus",
-      "cutie-mew-mew-magic"
+      "cutie-mew-mew-magic",
+      "big-shot",
+      "hammer-of-justice",
+      "inappropriate-recycling",
+      "airwaves"
     ]
   },
   {
@@ -310,4 +323,146 @@ export const motifs = [
       "the-third-sanctuary"
     ]
   },
+  {
+    id: "tv-time",
+    name: "TV Time",
+    color: "#f67710",
+    source: "feature-presentation",
+    songs: [
+      "feature-presentation",
+      "hey-every",
+      "tv-world",
+      "its-tv-time",
+      "dump",
+      "a-real-boy",
+      "catswing",
+      "hall-of-fame"
+    ]
+  },
+  {
+    id: "lost-girl",
+    name: "Lost Girl",
+    color: "#2eabca",
+    source: "lost-girl",
+    songs: [
+      "the-distance-between-two",
+      "lost-girl",
+      "girl-next-door",
+      "gingerbread-house",
+      "friends",
+      "walking-home",
+      "i-guess-im-in-love",
+      "festival",
+      "the-diner-song-of-best-friends"
+    ]
+  },
+  {
+    id: "gaster",
+    name: "Gaster",
+    color: "#000000",
+    source: "him",
+    songs: [
+      "lost-girl",
+      "another-him",
+      "darkness-falls",
+      "the-world-revolving",
+    ]
+  },
+  {
+    id: "determination",
+    name: "Determination",
+    color: "#ff0022",
+    source: "determination",
+    songs: [
+      "darkness-falls",
+      "faint-courage",
+      "rude-buster",
+      "lantern",
+      "asgore"
+    ]
+  },
+  {
+    id: "asgore",
+    name: "Asgore",
+    color: "#ffff24",
+    source: "asgore",
+    songs: [
+      "flower-king",
+      "that-day"
+    ]
+  },
+  {
+    id: "spamton",
+    name: "Spamton (motif)",
+    color: "#ee80d2",
+    source: "spamton",
+    songs: [
+      "spamton",
+      "deal-gone-wrong",
+      "big-shot",
+      "nows-your-chance-to-be-a",
+      "catswing",
+      "airwaves"
+    ]
+  },
+  {
+    id: "tenna",
+    name: "Tenna",
+    color: "#f6390f",
+    source: "mike-the-board-please",
+    songs: [
+      "mike-the-board-please",
+      "its-tv-time",
+      "physical-challenge",
+      "adventure-board",
+      "tv-world",
+      "doom-board",
+      "feature-presentation",
+      "catswing",
+      "metaphysical-challenge",
+      "paradise-paradise",
+      "big-city-board",
+      "raft-ride",
+      "sandy-board",
+      "quiz",
+      "board-clear",
+      "sword",
+      "query"
+    ]
+  },
+  {
+    id: "big-shot",
+    name: "BIG SHOT (motif)",
+    color: "#88076c",
+    source: "big-shot",
+    songs: [
+      "nows-your-chance-to-be-a",
+      "catswing",
+      "big-shot"
+    ]
+  },
+  {
+    id: "the-holy",
+    name: "THE HOLY (motif)",
+    color: "#90f1a5",
+    source: "the-holy",
+    songs: [
+      "dump",
+      "sword",
+      "flashback-excerpt",
+      "atrium"
+    ]
+  },
+  {
+    id: "your-best-nightmare",
+    name: "Your Best Nightmare",
+    color: "#950023",
+    source: "your-best-nightmare",
+    songs: [
+      "imminent-death",
+      "vs-susie",
+      "digital-roots",
+      "bit-roots",
+    ]
+  }
 ]
