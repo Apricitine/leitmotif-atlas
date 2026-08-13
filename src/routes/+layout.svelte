@@ -9,6 +9,7 @@
 	<style lang="scss">
 		* {
 			margin: 0;
+			outline: none;
 		}
 
 		html, body {

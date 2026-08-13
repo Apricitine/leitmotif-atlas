@@ -23,8 +23,7 @@
   let width = $state(0);
   let height = $state(0);
 
-  // Working copies — d3 mutates these node objects in place every tick.
-  // $state makes those external mutations visible to the template.
+  // holyyyyyy shit going crazzzy
   let nodes = $state<GraphNode[]>(songData.map((song) => ({ ...song })));
   const nodeById = new Map<string, GraphNode>(nodes.map((node) => [node.id, node]));
 
@@ -41,14 +40,13 @@
   const songMotifs = new Map<string, Motif[]>(
     nodes.map((node) => [node.id, motifData.filter((motif) => motif.songs.includes(node.id))])
   );
-  // which motifs each song is the origin track for, e.g. draws its source ring
   const sourceMotifs = new Map<string, Motif[]>(
     nodes.map((node) => [node.id, motifData.filter((motif) => motif.source === node.id)])
   );
 
   let svgEl: SVGSVGElement;
   let simulation: d3.Simulation<GraphNode, undefined> | undefined;
-  let ready = $state(false); // true once the simulation has resolved link.source/target into node refs
+  let ready = $state(false);
 
   let zoomTransform = $state.raw(d3.zoomIdentity);
   const transformStr = $derived(
@@ -122,9 +120,6 @@
     return 1;
   }
 
-  // point on the line from `from` to `to`, offset `r` px out from `from`'s center -
-  // used to stop lines at a node's edge instead of its center, so arrowheads sit
-  // cleanly against the circle instead of underneath it
   function edgePoint(from: GraphNode, to: GraphNode, r: number) {
     if (from.x === undefined || from.y === undefined || to.x === undefined || to.y === undefined) {
       return { x: 0, y: 0 };
@@ -148,7 +143,7 @@
       .velocityDecay(0.35)
       .on("end", settleHomes);
 
-    ready = true; // forceLink resolves source/target synchronously above, so safe now
+    ready = true;
 
     const zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent([0.4, 2.5]).on("zoom", (event) => {
       zoomTransform = event.transform;
@@ -167,9 +162,7 @@
     };
   });
 
-  // once the layout first settles, lock in each node's resting spot and add a
-  // gentle spring pulling it back there - this is what makes a dragged node
-  // pop back into place on release instead of drifting to a new position
+  // code to resolve the physics w all hte bounciness
   function settleHomes() {
     nodes.forEach((node) => {
       node.homeX = node.x;
@@ -180,7 +173,7 @@
       .force("anchorY", d3.forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15));
   }
 
-  // Svelte action - wires d3-drag onto a node circle
+  // svelte related stuff for dragging nodes
   function dragNode(el: SVGCircleElement, node: GraphNode) {
     const behavior = d3
       .drag<SVGCircleElement, GraphNode>()
@@ -241,8 +234,8 @@
 
 <div class="atlas">
   <header>
-    <h1>LEITMOTIF ATLAS</h1>
-    <p>sample data - swap in your own research to expand it.</p>
+    <h1>DELTARUNE LEITMOTIF ATLAS</h1>
+    <p>work in progress obv</p>
   </header>
 
   <div class="legend">
@@ -422,7 +415,7 @@
     </aside>
   {/if}
 
-  <p class="hint">drag songs to rearrange &middot; click a song or a bubble for details &middot; click a legend chip to isolate a theme</p>
+  <p class="hint">drag songs to rearrange - click a song or a bubble for details - click a legend chip to get a theme</p>
 </div>
 
 <style>

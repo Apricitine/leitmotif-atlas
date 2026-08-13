@@ -3,8 +3,7 @@ import * as d3 from "d3"
 export type GraphPoint = { x: number; y: number }
 type Coordinate = [number, number]
 
-// builds a smoothed, padded blob path around a set of {x, y} points -
-// circle for one point, stadium shape for two, expanded convex hull for 3+
+// makes the cool blobs around each motif, todo
 export function blobPath(points: readonly GraphPoint[], pad: number): string {
   if (points.length === 0) return ""
 
