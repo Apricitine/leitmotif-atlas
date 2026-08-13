@@ -143,7 +143,7 @@ export const songs = [
   { id: "the-distance-between-two", title: "The distance between two", chapter: 4 },
   { id: "c", title: "C", chapter: 4 },
   { id: "atrium", title: "ATRIUM", chapter: 4 },
-  { id: "from-now-on-battle-2", title: "From Now On (Battle 2)", chapter: 4 },
+  { id: "from-now-on", title: "From Now On (Battle 2)", chapter: 4 },
   { id: "gyaa-ha-ha", title: "Gyaa Ha ha!", chapter: 4 },
   { id: "fireplace", title: "Fireplace", chapter: 4 },
   { id: "mysterious-ringing", title: "Mysterious Ringing", chapter: 4 },
@@ -210,7 +210,8 @@ export const songs = [
   { id: "him", title: "Gaster's Theme", chapter: 8 },
   { id: "determination", title: "Determination", chapter: 8 },
   { id: "asgore", title: "ASGORE", chapter: 8 },
-  { id: "your-best-nightmare", title: "YOUR BEST NIGHTMARE", chapter: 8 }
+  { id: "your-best-nightmare", title: "YOUR BEST NIGHTMARE", chapter: 8 },
+  { id: "hymm", title: "Hymm", chapter: 4 },
 
 ]
 
@@ -239,7 +240,19 @@ export const motifs = [
       "dark-sanctuary",
       "festival",
       "i-guess-im-in-love",
-      "the-diner-song-of-best-friends"
+      "the-diner-song-of-best-friends",
+      "with-hope-crossed-on-our-hearts",
+      "hymm",
+      "piano-that-may-not-be-played-that-well",
+      "flower-man",
+      "running-sky",
+      "you-can-always-come-home",
+      "the-dark-truth",
+      "dark-place",
+      "ever-higher",
+      "from-now-on",
+      "guardian",
+      "crumbling-tower"
     ]
   },
   {
@@ -320,7 +333,13 @@ export const motifs = [
     songs: [
       "dark-sanctuary",
       "the-second-sanctuary",
-      "the-third-sanctuary"
+      "the-third-sanctuary",
+      "from-now-on",
+      "spawn",
+      "ever-higher",
+      "guardian",
+      "crumbling-tower",
+      "neverending-night"
     ]
   },
   {
@@ -463,6 +482,37 @@ export const motifs = [
       "vs-susie",
       "digital-roots",
       "bit-roots",
+    ]
+  },
+  {
+    id: "flowery",
+    name: "Flowery",
+    color: "#ffdd31",
+    source: "your-dads-best-friend",
+    songs: [
+      "sunset-of-seven-suns",
+      "flower-man",
+      "petal-dance",
+      "dreamwatchers",
+      "weak-flowers",
+      "goodnight-sweet-prince",
+      "beautiful-bathtime"
+    ]
+  },
+  {
+    id: "flowers",
+    name: "Flowers",
+    color: "#4eff37",
+    source: "sunset-of-seven-suns",
+    songs: [
+      "sunset-of-seven-suns",
+      "flower-foyer",
+      "running-sky",
+      "who-might-you-be",
+      "stop-criminell",
+      "im-telling",
+      "petal-dance",
+      "flower-castle"
     ]
   }
 ]
