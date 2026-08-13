@@ -63,7 +63,7 @@ export const songs = [
   { id: "almost-to-the-guys", title: "Almost To The Guys!", chapter: 2 },
   { id: "cool-beat", title: "Cool Beat", chapter: 2 },
   { id: "when-i-get-mad-i-dance-like-this", title: "When I Get Mad I Dance Like This", chapter: 2 },
-  { id: "cyber-battle-solo", title: "Cyber Battle (Solo)", chapter: 2 },
+  { id: "cyber-battle", title: "Cyber Battle (Solo)", chapter: 2 },
   { id: "when-i-get-happy-i-dance-like-this", title: "When I Get Happy I Dance Like This", chapter: 2 },
   { id: "sound-studio", title: "Sound Studio", chapter: 2 },
   { id: "berdly", title: "Berdly", chapter: 2 },
@@ -212,6 +212,14 @@ export const songs = [
   { id: "asgore", title: "ASGORE", chapter: 8 },
   { id: "your-best-nightmare", title: "YOUR BEST NIGHTMARE", chapter: 8 },
   { id: "hymm", title: "Hymm", chapter: 4 },
+  { id: "power-of-neo", title: "Power of \"NEO\"", chapter: 8 },
+  { id: "ruins", title: "Ruins", chapter: 8 },
+  { id: "spear-of-justice", title: "Spear of Justice", chapter: 8 },
+  { id: "ghost-fight", title: "Ghost Fight", chapter: 8 },
+  { id: "dummy", title: "Dummy!", chapter: 8 },
+  { id: "spooktune", title: "Spooktune", chapter: 8 },
+  { id: "battle-against-a-true-hero", title: "Battle Against a True Hero", chapter: 8 },
+  { id: "burn-in-despair", title: "BURN IN DESPAIR", chapter: 8 },
 
 ]
 
@@ -293,7 +301,9 @@ export const motifs = [
       "big-shot",
       "hammer-of-justice",
       "inappropriate-recycling",
-      "airwaves"
+      "airwaves",
+      "a-cybers-world",
+      "welcome-to-the-city"
     ]
   },
   {
@@ -310,7 +320,7 @@ export const motifs = [
   {
     id: "the-legend",
     name: "The Legend",
-    color: "#ffffff",
+    color: "#ffdca8",
     source: "the-legend",
     songs: [
       "the-legend",
@@ -397,7 +407,8 @@ export const motifs = [
       "faint-courage",
       "rude-buster",
       "lantern",
-      "asgore"
+      "asgore",
+      "vapor-buster"
     ]
   },
   {
@@ -482,6 +493,7 @@ export const motifs = [
       "vs-susie",
       "digital-roots",
       "bit-roots",
+      "neverending-night"
     ]
   },
   {
@@ -514,5 +526,244 @@ export const motifs = [
       "petal-dance",
       "flower-castle"
     ]
-  }
+  },
+  {
+    id: "lancer",
+    name: "Lancer",
+    color: "#305a91",
+    source: "lancer",
+    songs: [
+      "lancer",
+      "chaos-king",
+      "im-very-bad",
+      "thrash-machine",
+      "acid-tunnel-of-love",
+      "dig-dig-to-the-center-of-the-earth",
+      "vs-lancer",
+      "card-castle",
+      "its-pronounced-rules"
+    ]
+  },
+  {
+    id: "rouxls-kaard",
+    name: "Rouxls Kaard",
+    color: "#6987aa",
+    source: "rouxls-kaard",
+    songs: [
+      "rouxls-kaard",
+      "its-pronounced-rules"
+    ]
+  },
+  {
+    id: "card-castle",
+    name: "Card Castle",
+    color: "#474747",
+    source: "card-castle",
+    songs: [
+      "chaos-king",
+      "basement"
+    ]
+  },
+  {
+    id: "queen",
+    name: "Queen",
+    color: "#0051ff",
+    source: "queen",
+    songs: [
+      "queen",
+      "cool-mixtape",
+      "attack-of-the-killer-queen",
+      "pandora-palace",
+      "knock-you-down",
+      "a-simple-diversion",
+      "giga-size",
+      "elegant-entrance",
+      "smart-race"
+    ]
+  },
+  {
+    id: "berdly",
+    name: "Berdly",
+    color: "#0099ff",
+    source: "berdly",
+    songs: [
+      "berdly",
+      "smart-race",
+      "bluebird-of-misfortune",
+      "attack-of-the-killer-queen"
+    ]
+  },
+  {
+    id: "rude-buster",
+    name: "Rude Buster",
+    color: "#8800ff",
+    source: "rude-buster",
+    songs: [
+      "rude-buster",
+      "ruder-buster",
+      "rakuichi-buster",
+      "vapor-buster",
+      "lantern"
+    ]
+  },
+  {
+    id: "ruins",
+    name: "Ruins",
+    color: "#d400ff",
+    source: "ruins",
+    songs: [
+      "ruins",
+      "spear-of-justice",
+      "gyaa-ha-ha",
+      "fireplace",
+      "hammer-of-justice",
+      "battle-against-a-true-hero",
+      "need-a-hand"
+    ]
+  },
+  {
+    id: "spear-of-justice",
+    name: "Spear of Justice",
+    color: "#226f0d",
+    source: "spear-of-justice",
+    songs: [
+      "spear-of-justice",
+      "gyaa-ha-ha",
+      "fireplace",
+      "hammer-of-justice",
+      "need-a-hand"
+    ]
+  },
+  {
+    id: "gerson",
+    name: "Gerson",
+    color: "#951e8d",
+    source: "gyaa-ha-ha",
+    songs: [
+      "gyaa-ha-ha",
+      "wise-words",
+      "hammer-of-justice",
+      "need-a-hand"
+    ]
+  },
+  {
+    id: "power-of-neo",
+    name: "POWER OF NEO",
+    color: "#10c7ff",
+    source: "power-of-neo",
+    songs: [
+      "battle-against-a-true-hero",
+      "burning-eyes",
+      "big-shot"
+    ]
+  },
+  {
+    id: "burn-in-despair",
+    name: "BURN IN DESPAIR",
+    color: "#50110f",
+    source: "burn-in-despair",
+    songs: [
+      "black-knife",
+      "burning-eyes",
+      "giga-size",
+    ]
+  },
+  {
+    id: "spooktune",
+    name: "Spooktune",
+    color: "#90bddb",
+    source: "spooktune",
+    songs: [
+      "spooktune",
+      "cutie-mew-mew-magic",
+      "a-dark-zone"
+    ]
+  },
+  {
+    id: "ghost-fight",
+    name: "Ghost Fight",
+    color: "#506d7b",
+    source: "ghost-fight",
+    songs: [
+      "ghost-fight",
+      "chill-jailbreak-alarm-to-study-and-relax-to",
+      "the-ol-jitterbug",
+      "dummy"
+    ]
+  },
+  {
+    id: "dummy",
+    name: "Dummy",
+    color: "#b884a6",
+    source: "dummy",
+    songs: [
+      "dummy",
+      "big-shot"
+    ]
+  },
+  {
+    id: "susie",
+    name: "Susie",
+    color: "#c52fb9",
+    source: "susie",
+    songs: [
+      "susie",
+      "vs-susie",
+      "walking-home",
+      "the-diner-song-of-best-friends",
+      "i-guess-im-in-love",
+      "festival",
+      "friends"
+    ]
+  },
+  {
+    id: "titan",
+    name: "Titan",
+    color: "#111111",
+    source: "spawn",
+    songs: [
+      "spawn",
+      "heavy-footsteps",
+      "crumbling-tower"
+    ]
+  },
+  {
+    id: "sweet-capn-cakes",
+    name: "Sweet Cap'n Cakes",
+    color: "#12e635",
+    source: "cyber-battle",
+    songs: [
+      "cyber-battle",
+      "mini-studio",
+      "holiday-studio",
+      "sound-studio",
+      "when-i-get-happy-i-dance-like-this",
+      "cool-beat",
+      "almost-to-the-guys",
+      "a-cybers-world",
+      "welcome-to-the-city"
+    ]
+  },
+  {
+    id: "cyber-world",
+    name: "Cyber World",
+    color: "#12e680",
+    source: "a-cybers-world",
+    songs: [
+      "a-cybers-world",
+      "welcome-to-the-city"
+    ]
+  },
+  {
+    id: "hip-shop",
+    name: "Hip Shop",
+    color: "#6dd562",
+    source: "hip-shop",
+    songs: [
+      "hip-shop",
+      "welcome-to-the-green-room",
+      "dump",
+      "tv-world"
+    ]
+  },
 ]
