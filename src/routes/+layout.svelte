@@ -5,6 +5,7 @@
 </script>
 
 <svelte:head>
+<title>DELTARUNE Leitmotif Atlas</title>
 	<link rel="icon" href={favicon} />
 	<style lang="scss">
 		* {
