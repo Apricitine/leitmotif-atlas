@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import * as d3 from "d3";
-  import { songs as songData, motifs as motifData } from "$lib/data";
+  import { motifs as motifData } from "$lib/motifs";
+  import { songs as songData } from "$lib/songs";
   import { blobPath } from "$lib/graphUtils";
 
   type Song = (typeof songData)[number];

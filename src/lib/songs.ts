@@ -36,7 +36,7 @@ export const songs = [
   { id: "lancer", title: "Lancer", chapter: 1 },
   { id: "rude-buster", title: "Rude Buster", chapter: 1 },
   { id: "weird-birds", title: "Weird Birds", chapter: 1 },
-  { id: "fanfare-from-rose-of-winter", title: "Fanfare (from Rose of Winter)", chapter: 1 },
+  { id: "fanfare", title: "Fanfare (from Rose of Winter)", chapter: 1 },
   { id: "lantern", title: "Lantern", chapter: 1 },
   { id: "im-very-bad", title: "I'm Very Bad", chapter: 1 },
   { id: "checker-dance", title: "Checker Dance", chapter: 1 },
@@ -207,6 +207,52 @@ export const songs = [
   { id: "walking-home", title: "Walking Home", chapter: 5 },
   { id: "field-of-hopes-and-dreams-credits-version", title: "Field of Hopes and Dreams (Credits Version)", chapter: 5 },
   { id: "goodnight-sweet-prince", title: "Goodnight, Sweet Prince", chapter: 5 },
+
+  { id: "ocean", title: "ocean", chapter: 1, unlisted: true },
+  { id: "elevator", title: "elevator", chapter: 1, unlisted: true },
+  { id: "man", title: "man", chapter: 1, unlisted: true },
+
+  { id: "honksong", title: "honksong", chapter: 2, unlisted: true },
+  { id: "shinkansen", title: "shinkansen", chapter: 2, unlisted: true },
+  { id: "wind-highplace", title: "wind_highplace", chapter: 2, unlisted: true },
+  { id: "berdly-descend", title: "berdly_descend", chapter: 2, unlisted: true },
+  { id: "cybercity-alt", title: "cybercity_alt", chapter: 2, unlisted: true },
+  { id: "d", title: "d", chapter: 2, unlisted: true },
+  { id: "berdly-battle-heartbeat-true", title: "berdly_battle_heartbeat_true", chapter: 2, unlisted: true },
+
+  { id: "findher", title: "findher", chapter: 3, unlisted: true },
+  { id: "man-nes", title: "man_nes", chapter: 3, unlisted: true },
+
+  { id: "alt-church-lobby", title: "alt_church_lobby", chapter: 4, unlisted: true },
+  { id: "afterrain-inside", title: "afterrain_inside", chapter: 4, unlisted: true },
+  { id: "jitterbug-muffled", title: "jitterbug_muffled", chapter: 4, unlisted: true },
+  { id: "lancer-annoying", title: "lancer_annoying", chapter: 4, unlisted: true },
+  { id: "man-2", title: "man_2", chapter: 4, unlisted: true },
+  { id: "kris-piano-sevenfour", title: "kris_piano_sevenfour", chapter: 4, unlisted: true },
+  { id: "kris-piano-quiz", title: "kris_piano_quiz", chapter: 4, unlisted: true },
+  { id: "kris-piano-lancer-waltz", title: "kris_piano_lancer_waltz", chapter: 4, unlisted: true },
+  { id: "kris-piano-rouxls", title: "kris_piano_rouxls", chapter: 4, unlisted: true },
+  { id: "kris-piano-waitingroom", title: "kris_piano_waitingroom", chapter: 4, unlisted: true },
+  { id: "kris-piano-shop", title: "kris_piano_shop", chapter: 4, unlisted: true },
+  { id: "kris-piano-last-prophecy", title: "kris_piano_last_prophecy", chapter: 4, unlisted: true },
+  { id: "kris-piano-prophecy", title: "kris_piano_prophecy", chapter: 4, unlisted: true },
+
+  { id: "stealth", title: "stealth", chapter: 5, unlisted: true },
+  { id: "kikky-upgrade", title: "kikky_upgrade", chapter: 5, unlisted: true },
+  { id: "chapter-5-intro-audio", title: "ch5_intro_audio", chapter: 5, unlisted: true },
+  { id: "cowboy-song", title: "cowboy_song", chapter: 5, unlisted: true },
+  { id: "pink-theme-mad", title: "pink_theme_mad", chapter: 5, unlisted: true },
+  { id: "dog-balloon", title: "dog_balloon", chapter: 5, unlisted: true },
+  {
+    id: "deltarune-piano-collections-by-trevor-alan-gomes",
+    title: "deltarune_piano_collections_by_trevor_alan_gomes",
+    chapter: 5,
+    unlisted: true
+  },
+  { id: "happy-town", title: "happy_town", chapter: 5, unlisted: true },
+  { id: "chapter-5-weird-monologue-deep", title: "ch5_weird_monologue_deep", chapter: 5, unlisted: true },
+  { id: "chapter-5-inversion-lake-chant", title: "ch5_inversion_lake_chant", chapter: 5, unlisted: true },
+
   { id: "him", title: "Gaster's Theme", chapter: 8 },
   { id: "determination", title: "Determination", chapter: 8 },
   { id: "asgore", title: "ASGORE", chapter: 8 },
@@ -221,549 +267,4 @@ export const songs = [
   { id: "battle-against-a-true-hero", title: "Battle Against a True Hero", chapter: 8 },
   { id: "burn-in-despair", title: "BURN IN DESPAIR", chapter: 8 },
 
-]
-
-export const motifs = [
-  {
-    id: "dont-forget",
-    name: "Don't Forget (motif)",
-    color: "#ac4dff",
-    source: "dont-forget",
-    songs: [
-      "dont-forget",
-      "beginning",
-      "faint-glow",
-      "friendship",
-      "scarlet-forest",
-      "until-next-time",
-      "your-power",
-      "field-of-hopes-and-dreams",
-      "garden-of-hopes-and-dreams",
-      "the-world-revolving",
-      "cutie-mew-mew-magic",
-      "a-town-called-hometown",
-      "another-day-in-hometown",
-      "school",
-      "castle-funk",
-      "dark-sanctuary",
-      "festival",
-      "i-guess-im-in-love",
-      "the-diner-song-of-best-friends",
-      "with-hope-crossed-on-our-hearts",
-      "hymm",
-      "piano-that-may-not-be-played-that-well",
-      "flower-man",
-      "running-sky",
-      "you-can-always-come-home",
-      "the-dark-truth",
-      "dark-place",
-      "ever-higher",
-      "from-now-on",
-      "guardian",
-      "crumbling-tower"
-    ]
-  },
-  {
-    id: "once-upon-a-time",
-    name: "Once Upon a Time (motif)",
-    color: "#cf3a3a",
-    source: "once-upon-a-time",
-    songs: [
-      "beginning",
-      "garden-of-hopes-and-dreams",
-      "before-the-story",
-      "once-upon-a-time"
-    ]
-  },
-  {
-    id: "chase",
-    name: "Chase (motif)",
-    color: "#151a75",
-    source: "chase",
-    songs: [
-      "chase",
-      "the-door",
-      "the-world-revolving",
-      "black-knife",
-      "that-day"
-    ]
-  },
-  {
-    id: "freedom",
-    name: "Freedom",
-    color: "#ebaa2a",
-    source: "the-world-revolving",
-    songs: [
-      "dialtone",
-      "the-world-revolving",
-      "the-circus",
-      "cutie-mew-mew-magic",
-      "big-shot",
-      "hammer-of-justice",
-      "inappropriate-recycling",
-      "airwaves",
-      "a-cybers-world",
-      "welcome-to-the-city"
-    ]
-  },
-  {
-    id: "hometown",
-    name: "Hometown",
-    color: "#d8c091",
-    source: "a-town-called-hometown",
-    songs: [
-      "a-town-called-hometown",
-      "another-day-in-hometown",
-      "school"
-    ]
-  },
-  {
-    id: "the-legend",
-    name: "The Legend",
-    color: "#ffdca8",
-    source: "the-legend",
-    songs: [
-      "the-legend",
-      "castle-funk",
-      "my-castle-town",
-      "dark-sanctuary",
-      "the-second-sanctuary",
-      "chaos-king",
-      "empty-town",
-      "the-legend?",
-      "a-dark-zone",
-      "the-third-sanctuary"
-    ]
-  },
-  {
-    id: "dark-sanctuary",
-    name: "Dark Sanctuary",
-    color: "#2e0d4b",
-    source: "dark-sanctuary",
-    songs: [
-      "dark-sanctuary",
-      "the-second-sanctuary",
-      "the-third-sanctuary",
-      "from-now-on",
-      "spawn",
-      "ever-higher",
-      "guardian",
-      "crumbling-tower",
-      "neverending-night"
-    ]
-  },
-  {
-    id: "tv-time",
-    name: "TV Time",
-    color: "#f67710",
-    source: "feature-presentation",
-    songs: [
-      "feature-presentation",
-      "hey-every",
-      "tv-world",
-      "its-tv-time",
-      "dump",
-      "a-real-boy",
-      "catswing",
-      "hall-of-fame"
-    ]
-  },
-  {
-    id: "lost-girl",
-    name: "Lost Girl",
-    color: "#2eabca",
-    source: "lost-girl",
-    songs: [
-      "the-distance-between-two",
-      "lost-girl",
-      "girl-next-door",
-      "gingerbread-house",
-      "friends",
-      "walking-home",
-      "i-guess-im-in-love",
-      "festival",
-      "the-diner-song-of-best-friends"
-    ]
-  },
-  {
-    id: "gaster",
-    name: "Gaster",
-    color: "#000000",
-    source: "him",
-    songs: [
-      "lost-girl",
-      "another-him",
-      "darkness-falls",
-      "the-world-revolving",
-    ]
-  },
-  {
-    id: "determination",
-    name: "Determination",
-    color: "#ff0022",
-    source: "determination",
-    songs: [
-      "darkness-falls",
-      "faint-courage",
-      "rude-buster",
-      "lantern",
-      "asgore",
-      "vapor-buster"
-    ]
-  },
-  {
-    id: "asgore",
-    name: "Asgore",
-    color: "#ffff24",
-    source: "asgore",
-    songs: [
-      "flower-king",
-      "that-day"
-    ]
-  },
-  {
-    id: "spamton",
-    name: "Spamton (motif)",
-    color: "#ee80d2",
-    source: "spamton",
-    songs: [
-      "spamton",
-      "deal-gone-wrong",
-      "big-shot",
-      "nows-your-chance-to-be-a",
-      "catswing",
-      "airwaves"
-    ]
-  },
-  {
-    id: "tenna",
-    name: "Tenna",
-    color: "#f6390f",
-    source: "mike-the-board-please",
-    songs: [
-      "mike-the-board-please",
-      "its-tv-time",
-      "physical-challenge",
-      "adventure-board",
-      "tv-world",
-      "doom-board",
-      "feature-presentation",
-      "catswing",
-      "metaphysical-challenge",
-      "paradise-paradise",
-      "big-city-board",
-      "raft-ride",
-      "sandy-board",
-      "quiz",
-      "board-clear",
-      "sword",
-      "query"
-    ]
-  },
-  {
-    id: "big-shot",
-    name: "BIG SHOT (motif)",
-    color: "#88076c",
-    source: "big-shot",
-    songs: [
-      "nows-your-chance-to-be-a",
-      "catswing",
-      "big-shot"
-    ]
-  },
-  {
-    id: "the-holy",
-    name: "THE HOLY (motif)",
-    color: "#90f1a5",
-    source: "the-holy",
-    songs: [
-      "dump",
-      "sword",
-      "flashback-excerpt",
-      "atrium"
-    ]
-  },
-  {
-    id: "your-best-nightmare",
-    name: "Your Best Nightmare",
-    color: "#950023",
-    source: "your-best-nightmare",
-    songs: [
-      "imminent-death",
-      "vs-susie",
-      "digital-roots",
-      "bit-roots",
-      "neverending-night"
-    ]
-  },
-  {
-    id: "flowery",
-    name: "Flowery",
-    color: "#ffdd31",
-    source: "your-dads-best-friend",
-    songs: [
-      "sunset-of-seven-suns",
-      "flower-man",
-      "petal-dance",
-      "dreamwatchers",
-      "weak-flowers",
-      "goodnight-sweet-prince",
-      "beautiful-bathtime"
-    ]
-  },
-  {
-    id: "flowers",
-    name: "Flowers",
-    color: "#4eff37",
-    source: "sunset-of-seven-suns",
-    songs: [
-      "sunset-of-seven-suns",
-      "flower-foyer",
-      "running-sky",
-      "who-might-you-be",
-      "stop-criminell",
-      "im-telling",
-      "petal-dance",
-      "flower-castle"
-    ]
-  },
-  {
-    id: "lancer",
-    name: "Lancer",
-    color: "#305a91",
-    source: "lancer",
-    songs: [
-      "lancer",
-      "chaos-king",
-      "im-very-bad",
-      "thrash-machine",
-      "acid-tunnel-of-love",
-      "dig-dig-to-the-center-of-the-earth",
-      "vs-lancer",
-      "card-castle",
-      "its-pronounced-rules"
-    ]
-  },
-  {
-    id: "rouxls-kaard",
-    name: "Rouxls Kaard",
-    color: "#6987aa",
-    source: "rouxls-kaard",
-    songs: [
-      "rouxls-kaard",
-      "its-pronounced-rules"
-    ]
-  },
-  {
-    id: "card-castle",
-    name: "Card Castle",
-    color: "#474747",
-    source: "card-castle",
-    songs: [
-      "chaos-king",
-      "basement"
-    ]
-  },
-  {
-    id: "queen",
-    name: "Queen",
-    color: "#0051ff",
-    source: "queen",
-    songs: [
-      "queen",
-      "cool-mixtape",
-      "attack-of-the-killer-queen",
-      "pandora-palace",
-      "knock-you-down",
-      "a-simple-diversion",
-      "giga-size",
-      "elegant-entrance",
-      "smart-race"
-    ]
-  },
-  {
-    id: "berdly",
-    name: "Berdly",
-    color: "#0099ff",
-    source: "berdly",
-    songs: [
-      "berdly",
-      "smart-race",
-      "bluebird-of-misfortune",
-      "attack-of-the-killer-queen"
-    ]
-  },
-  {
-    id: "rude-buster",
-    name: "Rude Buster",
-    color: "#8800ff",
-    source: "rude-buster",
-    songs: [
-      "rude-buster",
-      "ruder-buster",
-      "rakuichi-buster",
-      "vapor-buster",
-      "lantern"
-    ]
-  },
-  {
-    id: "ruins",
-    name: "Ruins",
-    color: "#d400ff",
-    source: "ruins",
-    songs: [
-      "ruins",
-      "spear-of-justice",
-      "gyaa-ha-ha",
-      "fireplace",
-      "hammer-of-justice",
-      "battle-against-a-true-hero",
-      "need-a-hand"
-    ]
-  },
-  {
-    id: "spear-of-justice",
-    name: "Spear of Justice",
-    color: "#226f0d",
-    source: "spear-of-justice",
-    songs: [
-      "spear-of-justice",
-      "gyaa-ha-ha",
-      "fireplace",
-      "hammer-of-justice",
-      "need-a-hand"
-    ]
-  },
-  {
-    id: "gerson",
-    name: "Gerson",
-    color: "#951e8d",
-    source: "gyaa-ha-ha",
-    songs: [
-      "gyaa-ha-ha",
-      "wise-words",
-      "hammer-of-justice",
-      "need-a-hand"
-    ]
-  },
-  {
-    id: "power-of-neo",
-    name: "POWER OF NEO",
-    color: "#10c7ff",
-    source: "power-of-neo",
-    songs: [
-      "battle-against-a-true-hero",
-      "burning-eyes",
-      "big-shot"
-    ]
-  },
-  {
-    id: "burn-in-despair",
-    name: "BURN IN DESPAIR",
-    color: "#50110f",
-    source: "burn-in-despair",
-    songs: [
-      "black-knife",
-      "burning-eyes",
-      "giga-size",
-    ]
-  },
-  {
-    id: "spooktune",
-    name: "Spooktune",
-    color: "#90bddb",
-    source: "spooktune",
-    songs: [
-      "spooktune",
-      "cutie-mew-mew-magic",
-      "a-dark-zone"
-    ]
-  },
-  {
-    id: "ghost-fight",
-    name: "Ghost Fight",
-    color: "#506d7b",
-    source: "ghost-fight",
-    songs: [
-      "ghost-fight",
-      "chill-jailbreak-alarm-to-study-and-relax-to",
-      "the-ol-jitterbug",
-      "dummy"
-    ]
-  },
-  {
-    id: "dummy",
-    name: "Dummy",
-    color: "#b884a6",
-    source: "dummy",
-    songs: [
-      "dummy",
-      "big-shot"
-    ]
-  },
-  {
-    id: "susie",
-    name: "Susie",
-    color: "#c52fb9",
-    source: "susie",
-    songs: [
-      "susie",
-      "vs-susie",
-      "walking-home",
-      "the-diner-song-of-best-friends",
-      "i-guess-im-in-love",
-      "festival",
-      "friends"
-    ]
-  },
-  {
-    id: "titan",
-    name: "Titan",
-    color: "#111111",
-    source: "spawn",
-    songs: [
-      "spawn",
-      "heavy-footsteps",
-      "crumbling-tower"
-    ]
-  },
-  {
-    id: "sweet-capn-cakes",
-    name: "Sweet Cap'n Cakes",
-    color: "#12e635",
-    source: "cyber-battle",
-    songs: [
-      "cyber-battle",
-      "mini-studio",
-      "holiday-studio",
-      "sound-studio",
-      "when-i-get-happy-i-dance-like-this",
-      "cool-beat",
-      "almost-to-the-guys",
-      "a-cybers-world",
-      "welcome-to-the-city"
-    ]
-  },
-  {
-    id: "cyber-world",
-    name: "Cyber World",
-    color: "#12e680",
-    source: "a-cybers-world",
-    songs: [
-      "a-cybers-world",
-      "welcome-to-the-city"
-    ]
-  },
-  {
-    id: "hip-shop",
-    name: "Hip Shop",
-    color: "#6dd562",
-    source: "hip-shop",
-    songs: [
-      "hip-shop",
-      "welcome-to-the-green-room",
-      "dump",
-      "tv-world"
-    ]
-  },
 ]
