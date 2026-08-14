@@ -79,8 +79,6 @@ export const motifs = [
       "hammer-of-justice",
       "inappropriate-recycling",
       "airwaves",
-      "a-cybers-world",
-      "welcome-to-the-city"
     ]
   },
   {
@@ -248,7 +246,8 @@ export const motifs = [
       "quiz",
       "board-clear",
       "sword",
-      "query"
+      "query",
+      "and-now-for-todays-sponsors"
     ]
   },
   {
@@ -296,9 +295,9 @@ export const motifs = [
     color: "#ffdd31",
     source: "your-dads-best-friend",
     songs: [
+      "your-dads-best-friend",
       "sunset-of-seven-suns",
       "flower-man",
-      "petal-dance",
       "dreamwatchers",
       "weak-flowers",
       "goodnight-sweet-prince",
@@ -318,7 +317,28 @@ export const motifs = [
       "stop-criminell",
       "im-telling",
       "petal-dance",
-      "flower-castle"
+      "flower-castle",
+      "violet-tactics"
+    ]
+  },
+  {
+    id: "petal-dance",
+    name: "Petal Dance",
+    color: "#37fff2",
+    source: "petal-dance",
+    songs: [
+      "petal-dance",
+      "flower-man"
+    ]
+  },
+  {
+    id: "violet-tactics",
+    name: "Violet Tactics",
+    color: "#7423d0",
+    source: "violet-tactics",
+    songs: [
+      "violet-tactics",
+      "flower-foyer"
     ]
   },
   {
@@ -460,7 +480,6 @@ export const motifs = [
     songs: [
       "black-knife",
       "burning-eyes",
-      "giga-size",
     ]
   },
   {
@@ -577,7 +596,7 @@ export const motifs = [
       "scarlet-forest",
     ]
   },
-    {
+  {
     id: "mike",
     name: "Mike",
     color: "#682824",
@@ -585,7 +604,55 @@ export const motifs = [
     songs: [
       "catswing",
       "raise-up-your-bat",
-      "catswing"
+      "volume-adjustment",
+      "stealth"
+    ]
+  },
+  {
+    id: "doom-board",
+    name: "Doom Board",
+    color: "#bf0040",
+    source: "doom-board",
+    songs: [
+      "doom-board",
+      "metaphysical-challenge",
+      "its-tv-time",
+    ]
+  },
+  {
+    id: "friends",
+    name: "Friends",
+    color: "#5eff00",
+    source: "friends",
+    songs: [
+      "friends",
+      "festival",
+      "i-guess-im-in-love",
+      "the-diner-song-of-best-friends",
+      "walking-home"
+    ]
+  },
+  {
+    id: "pink",
+    name: "Pink",
+    color: "#ff87db",
+    source: "pink",
+    songs: [
+      "pink",
+      "im-telling",
+      "cutie-mew-mew-magic",
+      "pink-theme-mad"
+    ]
+  },
+  {
+    id: "keygen",
+    name: "KEYGEN",
+    color: "#9c9787",
+    source: "keygen",
+    songs: [
+      "keygen",
+      "south-of-the-border",
+      "pushing-buddies",
     ]
   },
 ]
