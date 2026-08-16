@@ -1,177 +1,225 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import * as d3 from "d3";
-  import { motifs as motifData } from "$lib/motifs";
-  import { songs as songData } from "$lib/songs";
-  import { blobPath } from "$lib/graphUtils";
+  import { onMount } from "svelte"
+  import * as d3 from "d3"
+  import { motifs as motifData } from "$lib/motifs"
+  import { songs as songData } from "$lib/songs"
+  import { blobPath } from "$lib/graphUtils"
 
-  type Song = (typeof songData)[number];
-  type Motif = (typeof motifData)[number];
-  type GraphNode = Song & d3.SimulationNodeDatum & { homeX?: number; homeY?: number };
+  type Song = (typeof songData)[number]
+  type Motif = (typeof motifData)[number]
+  type GraphNode = Song &
+    d3.SimulationNodeDatum & { homeX?: number; homeY?: number }
   type GraphLink = d3.SimulationLinkDatum<GraphNode> & {
-    source: string | GraphNode;
-    target: string | GraphNode;
-    motif: string;
-    color: string;
-  };
+    source: string | GraphNode
+    target: string | GraphNode
+    motif: string
+    color: string
+  }
   type ResolvedGraphLink = Omit<GraphLink, "source" | "target"> & {
-    source: GraphNode;
-    target: GraphNode;
-  };
-  type Blob = Motif & { path: string };
-  type PanelContent = { type: "song"; data: GraphNode } | { type: "motif"; data: Motif } | null;
+    source: GraphNode
+    target: GraphNode
+  }
+  type Blob = Motif & { path: string }
+  type PanelContent =
+    | { type: "song"; data: GraphNode }
+    | { type: "motif"; data: Motif }
+    | null
 
-  let width = $state(0);
-  let height = $state(0);
+  let width = $state(0)
+  let height = $state(0)
 
   // holyyyyyy shit going crazzzy
-  let nodes = $state<GraphNode[]>(songData.map((song) => ({ ...song })));
-  const nodeById = new Map<string, GraphNode>(nodes.map((node) => [node.id, node]));
+  let nodes = $state<GraphNode[]>(songData.map((song) => ({ ...song })))
+  const nodeById = new Map<string, GraphNode>(
+    nodes.map((node) => [node.id, node]),
+  )
 
-  let links = $state<GraphLink[]>([]);
+  let links = $state<GraphLink[]>([])
   motifData.forEach((motif) => {
     motif.songs
       .filter((id) => id !== motif.source)
       .forEach((id) => {
-        links.push({ source: motif.source, target: id, motif: motif.id, color: motif.color });
-      });
-  });
+        links.push({
+          source: motif.source,
+          target: id,
+          motif: motif.id,
+          color: motif.color,
+        })
+      })
+  })
 
-  const motifSongs = new Map<string, string[]>(motifData.map((motif) => [motif.id, motif.songs]));
+  const motifSongs = new Map<string, string[]>(
+    motifData.map((motif) => [motif.id, motif.songs]),
+  )
   const songMotifs = new Map<string, Motif[]>(
-    nodes.map((node) => [node.id, motifData.filter((motif) => motif.songs.includes(node.id))])
-  );
+    nodes.map((node) => [
+      node.id,
+      motifData.filter((motif) => motif.songs.includes(node.id)),
+    ]),
+  )
   const sourceMotifs = new Map<string, Motif[]>(
-    nodes.map((node) => [node.id, motifData.filter((motif) => motif.source === node.id)])
-  );
+    nodes.map((node) => [
+      node.id,
+      motifData.filter((motif) => motif.source === node.id),
+    ]),
+  )
 
-  let svgEl: SVGSVGElement;
-  let simulation: d3.Simulation<GraphNode, undefined> | undefined;
-  let ready = $state(false);
+  let svgEl: SVGSVGElement
+  let simulation: d3.Simulation<GraphNode, undefined> | undefined
+  let ready = $state(false)
 
-  let zoomTransform = $state.raw(d3.zoomIdentity);
+  let zoomTransform = $state.raw(d3.zoomIdentity)
   const transformStr = $derived(
-    `translate(${zoomTransform.x},${zoomTransform.y}) scale(${zoomTransform.k})`
-  );
+    `translate(${zoomTransform.x},${zoomTransform.y}) scale(${zoomTransform.k})`,
+  )
 
-  let hoveredSong = $state<string | null>(null);
-  let hoveredMotif = $state<string | null>(null);
-  let isolatedMotifs = $state(new Set<string>());
-  let panelContent = $state<PanelContent>(null);
+  let hoveredSong = $state<string | null>(null)
+  let hoveredMotif = $state<string | null>(null)
+  let isolatedMotifs = $state(new Set<string>())
+  let panelContent = $state<PanelContent>(null)
 
   const blobs = $derived.by<Blob[]>(() =>
     motifData.map((motif) => {
       const points = motif.songs.flatMap((id) => {
-        const node = nodes.find((candidate) => candidate.id === id);
-        return node?.x !== undefined && node.y !== undefined ? [{ x: node.x, y: node.y }] : [];
-      });
-      return { ...motif, path: blobPath(points, 30) };
-    })
-  );
+        const node = nodes.find((candidate) => candidate.id === id)
+        return node?.x !== undefined && node.y !== undefined
+          ? [{ x: node.x, y: node.y }]
+          : []
+      })
+      return { ...motif, path: blobPath(points, 30) }
+    }),
+  )
 
   const activeSongs = $derived(
     hoveredSong
-      ? new Set([hoveredSong, ...getSongMotifs(hoveredSong).flatMap((motif) => motif.songs)])
+      ? new Set([
+          hoveredSong,
+          ...getSongMotifs(hoveredSong).flatMap((motif) => motif.songs),
+        ])
       : hoveredMotif
         ? new Set(motifSongs.get(hoveredMotif) ?? [])
-        : null
-  );
+        : null,
+  )
 
   const activeMotifs = $derived(
     hoveredSong
       ? new Set(getSongMotifs(hoveredSong).map((motif) => motif.id))
       : hoveredMotif
         ? new Set([hoveredMotif])
-        : null
-  );
+        : null,
+  )
 
-  const resolvedLinks = $derived(ready ? (links as ResolvedGraphLink[]) : []);
+  const resolvedLinks = $derived(ready ? (links as ResolvedGraphLink[]) : [])
 
   function getSongMotifs(songId: string) {
-    return songMotifs.get(songId) ?? [];
+    return songMotifs.get(songId) ?? []
   }
 
   function getSourceMotifs(songId: string) {
-    return sourceMotifs.get(songId) ?? [];
+    return sourceMotifs.get(songId) ?? []
   }
 
   function getNode(songId: string) {
-    return nodeById.get(songId);
+    return nodeById.get(songId)
   }
 
   function nodeOpacity(node: GraphNode) {
-    if (activeSongs) return activeSongs.has(node.id) ? 1 : 0.15;
+    if (activeSongs) return activeSongs.has(node.id) ? 1 : 0.15
     if (isolatedMotifs.size > 0) {
-      const active = new Set<string>();
-      isolatedMotifs.forEach((id) => (motifSongs.get(id) ?? []).forEach((song) => active.add(song)));
-      return active.has(node.id) ? 1 : 0.12;
+      const active = new Set<string>()
+      isolatedMotifs.forEach((id) =>
+        (motifSongs.get(id) ?? []).forEach((song) => active.add(song)),
+      )
+      return active.has(node.id) ? 1 : 0.12
     }
-    return 1;
+    return 1
   }
 
   function linkOpacity(link: GraphLink) {
-    if (activeMotifs) return activeMotifs.has(link.motif) ? 1 : 0.08;
-    if (isolatedMotifs.size > 0) return isolatedMotifs.has(link.motif) ? 1 : 0.05;
-    return 0.45;
+    if (activeMotifs) return activeMotifs.has(link.motif) ? 1 : 0.08
+    if (isolatedMotifs.size > 0)
+      return isolatedMotifs.has(link.motif) ? 1 : 0.05
+    return 0.45
   }
 
   function blobOpacity(motif: Blob) {
-    if (activeMotifs) return activeMotifs.has(motif.id) ? 1 : 0.06;
-    if (isolatedMotifs.size > 0) return isolatedMotifs.has(motif.id) ? 1 : 0.04;
-    return 1;
+    if (activeMotifs) return activeMotifs.has(motif.id) ? 1 : 0.06
+    if (isolatedMotifs.size > 0) return isolatedMotifs.has(motif.id) ? 1 : 0.04
+    return 1
   }
 
   function edgePoint(from: GraphNode, to: GraphNode, r: number) {
-    if (from.x === undefined || from.y === undefined || to.x === undefined || to.y === undefined) {
-      return { x: 0, y: 0 };
+    if (
+      from.x === undefined ||
+      from.y === undefined ||
+      to.x === undefined ||
+      to.y === undefined
+    ) {
+      return { x: 0, y: 0 }
     }
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    const len = Math.sqrt(dx * dx + dy * dy) || 1;
-    return { x: from.x + (dx / len) * r, y: from.y + (dy / len) * r };
+    const dx = to.x - from.x
+    const dy = to.y - from.y
+    const len = Math.sqrt(dx * dx + dy * dy) || 1
+    return { x: from.x + (dx / len) * r, y: from.y + (dy / len) * r }
   }
 
   onMount(() => {
-    width = window.innerWidth;
-    height = window.innerHeight;
+    width = window.innerWidth
+    height = window.innerHeight
 
     simulation = d3
       .forceSimulation<GraphNode>(nodes)
-      .force("link", d3.forceLink<GraphNode, GraphLink>(links).id((node) => node.id).distance(95).strength(0.35))
+      .force(
+        "link",
+        d3
+          .forceLink<GraphNode, GraphLink>(links)
+          .id((node) => node.id)
+          .distance(95)
+          .strength(0.35),
+      )
       .force("charge", d3.forceManyBody().strength(-260))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("collide", d3.forceCollide(38))
       .velocityDecay(0.35)
-      .on("end", settleHomes);
+      .on("end", settleHomes)
 
-    ready = true;
+    ready = true
 
-    const zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent([0.4, 2.5]).on("zoom", (event) => {
-      zoomTransform = event.transform;
-    });
-    d3.select(svgEl).call(zoom);
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.4, 2.5])
+      .on("zoom", (event) => {
+        zoomTransform = event.transform
+      })
+    d3.select(svgEl).call(zoom)
 
     const onResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      simulation?.force("center", d3.forceCenter(width / 2, height / 2));
-    };
-    window.addEventListener("resize", onResize);
+      width = window.innerWidth
+      height = window.innerHeight
+      simulation?.force("center", d3.forceCenter(width / 2, height / 2))
+    }
+    window.addEventListener("resize", onResize)
     return () => {
-      window.removeEventListener("resize", onResize);
-      simulation?.stop();
-    };
-  });
+      window.removeEventListener("resize", onResize)
+      simulation?.stop()
+    }
+  })
 
   // code to resolve the physics w all hte bounciness
   function settleHomes() {
     nodes.forEach((node) => {
-      node.homeX = node.x;
-      node.homeY = node.y;
-    });
+      node.homeX = node.x
+      node.homeY = node.y
+    })
     simulation
-      ?.force("anchorX", d3.forceX<GraphNode>((node) => node.homeX ?? 0).strength(0.15))
-      .force("anchorY", d3.forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15));
+      ?.force(
+        "anchorX",
+        d3.forceX<GraphNode>((node) => node.homeX ?? 0).strength(0.15),
+      )
+      .force(
+        "anchorY",
+        d3.forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15),
+      )
   }
 
   // svelte related stuff for dragging nodes
@@ -179,57 +227,57 @@
     const behavior = d3
       .drag<SVGCircleElement, GraphNode>()
       .on("start", (event) => {
-        if (!event.active) simulation?.alphaTarget(0.35).restart();
-        node.fx = node.x;
-        node.fy = node.y;
+        if (!event.active) simulation?.alphaTarget(0.35).restart()
+        node.fx = node.x
+        node.fy = node.y
       })
       .on("drag", (event) => {
-        node.fx = event.x;
-        node.fy = event.y;
+        node.fx = event.x
+        node.fy = event.y
       })
       .on("end", (event) => {
-        if (!event.active) simulation?.alphaTarget(0);
-        node.fx = null;
-        node.fy = null;
-      });
-    d3.select<SVGCircleElement, GraphNode>(el).datum(node).call(behavior);
+        if (!event.active) simulation?.alphaTarget(0)
+        node.fx = null
+        node.fy = null
+      })
+    d3.select<SVGCircleElement, GraphNode>(el).datum(node).call(behavior)
     return {
       destroy() {
-        d3.select(el).on(".drag", null);
-      }
-    };
+        d3.select(el).on(".drag", null)
+      },
+    }
   }
 
   function toggleMotif(id: string) {
-    const next = new Set(isolatedMotifs);
-    next.has(id) ? next.delete(id) : next.add(id);
-    isolatedMotifs = next;
+    const next = new Set(isolatedMotifs)
+    next.has(id) ? next.delete(id) : next.add(id)
+    isolatedMotifs = next
   }
 
   function openSong(node: GraphNode) {
-    panelContent = { type: "song", data: node };
+    panelContent = { type: "song", data: node }
   }
   function openMotif(motif: Motif) {
-    panelContent = { type: "motif", data: motif };
+    panelContent = { type: "motif", data: motif }
   }
   function closePanel() {
-    panelContent = null;
+    panelContent = null
   }
 
   function closePanelOnClick(el: SVGSVGElement) {
-    el.addEventListener("click", closePanel);
+    el.addEventListener("click", closePanel)
     return {
       destroy() {
-        el.removeEventListener("click", closePanel);
-      }
-    };
+        el.removeEventListener("click", closePanel)
+      },
+    }
   }
 
   function activateWithKeyboard(event: KeyboardEvent, callback: () => void) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    event.stopPropagation();
-    callback();
+    if (event.key !== "Enter" && event.key !== " ") return
+    event.preventDefault()
+    event.stopPropagation()
+    callback()
   }
 </script>
 
@@ -240,23 +288,20 @@
   </header>
 
   <div class="legend">
-    {#each motifData as m (m.id)}
+    
+    {#each motifData as motif (motif.id)}
       <button
         class="chip"
-        class:dimmed={isolatedMotifs.size > 0 && !isolatedMotifs.has(m.id)}
-        onclick={() => toggleMotif(m.id)}
+        class:dimmed={isolatedMotifs.size > 0 && !isolatedMotifs.has(motif.id)}
+        onclick={() => toggleMotif(motif.id)}
       >
-        <span class="dot" style:background={m.color}></span>
-        {m.name}
+        <span class="dot" style:background={motif.color}></span>
+        {motif.name}
       </button>
     {/each}
   </div>
 
-  <svg
-    bind:this={svgEl}
-    viewBox="0 0 {width} {height}"
-    use:closePanelOnClick
-  >
+  <svg bind:this={svgEl} viewBox="0 0 {width} {height}" use:closePanelOnClick>
     <defs>
       <filter id="blob-blur" x="-60%" y="-60%" width="220%" height="220%">
         <feGaussianBlur stdDeviation="14" />
@@ -309,10 +354,11 @@
             tabindex="0"
             aria-label={`Open ${motif.name} details`}
             onclick={(event) => {
-              event.stopPropagation();
-              openMotif(motif);
+              event.stopPropagation()
+              openMotif(motif)
             }}
-            onkeydown={(event) => activateWithKeyboard(event, () => openMotif(motif))}
+            onkeydown={(event) =>
+              activateWithKeyboard(event, () => openMotif(motif))}
             onmouseenter={() => (hoveredMotif = motif.id)}
             onmouseleave={() => (hoveredMotif = null)}
           />
@@ -362,10 +408,11 @@
             tabindex="0"
             aria-label={`Open ${node.title} details`}
             onclick={(event) => {
-              event.stopPropagation();
-              openSong(node);
+              event.stopPropagation()
+              openSong(node)
             }}
-            onkeydown={(event) => activateWithKeyboard(event, () => openSong(node))}
+            onkeydown={(event) =>
+              activateWithKeyboard(event, () => openSong(node))}
             onmouseenter={() => (hoveredSong = node.id)}
             onmouseleave={() => (hoveredSong = null)}
           />
@@ -389,8 +436,12 @@
         <h2>{panelContent.data.title}</h2>
         <div class="meta">Chapter {panelContent.data.chapter}</div>
         {#each getSongMotifs(panelContent.data.id) as m (m.id)}
-          <h3>{m.source === panelContent.data.id ? "Source of" : "Derives from"}</h3>
-          <div class="motif-row"><span class="dot" style:background={m.color}></span>{m.name}</div>
+          <h3>
+            {m.source === panelContent.data.id ? "Source of" : "Derives from"}
+          </h3>
+          <div class="motif-row">
+            <span class="dot" style:background={m.color}></span>{m.name}
+          </div>
           {#if m.source === panelContent.data.id}
             {#each m.songs.filter((id) => id !== m.source) as id}
               <div class="related-song">{getNode(id)?.title}</div>
@@ -416,7 +467,10 @@
     </aside>
   {/if}
 
-  <p class="hint">drag songs to rearrange - click a song or a bubble for details - click a legend chip to get a theme</p>
+  <p class="hint">
+    drag songs to rearrange - click a song or a bubble for details - click a
+    legend chip to get a theme
+  </p>
 </div>
 
 <style>
@@ -470,6 +524,12 @@
     flex-direction: column;
     gap: 8px;
     align-items: flex-end;
+    height: 90vh;
+    overflow: scroll;
+  }
+
+  .legend::-webkit-scrollbar {
+    display: none
   }
 
   .chip {

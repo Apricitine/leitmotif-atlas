@@ -392,7 +392,8 @@ export const motifs = [
       "a-simple-diversion",
       "giga-size",
       "elegant-entrance",
-      "smart-race"
+      "smart-race",
+      "catswing"
     ]
   },
   {
@@ -653,6 +654,16 @@ export const motifs = [
       "keygen",
       "south-of-the-border",
       "pushing-buddies",
+    ]
+  },
+  {
+    id: "ruder",
+    name: "Ruder",
+    color: "#5f3875",
+    source: "ruder-buster",
+    songs: [
+      "ruder-buster",
+      "catswing",
     ]
   },
 ]
