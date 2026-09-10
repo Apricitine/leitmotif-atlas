@@ -27,7 +27,6 @@ export const motifs = [
       "i-guess-im-in-love",
       "the-diner-song-of-best-friends",
       "with-hope-crossed-on-our-hearts",
-      "hymm",
       "piano-that-may-not-be-played-that-well",
       "flower-man",
       "running-sky",
@@ -37,7 +36,8 @@ export const motifs = [
       "ever-higher",
       "from-now-on",
       "guardian",
-      "crumbling-tower"
+      "crumbling-tower",
+      "hymm",
     ]
   },
   {
@@ -89,7 +89,8 @@ export const motifs = [
     songs: [
       "a-town-called-hometown",
       "another-day-in-hometown",
-      "school"
+      "school",
+      "happy-town"
     ]
   },
   {
@@ -666,4 +667,14 @@ export const motifs = [
       "catswing",
     ]
   },
+  {
+    id: "flashback",
+    name: "Flashback",
+    color: "#008fa8",
+    source: "flashback-excerpt",
+    songs: [
+      "flashback-excerpt",
+      "chapter-5-weird-monologue-deep"
+    ]
+  }
 ]
