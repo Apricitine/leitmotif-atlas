@@ -1,19 +1,34 @@
-import * as d3 from "d3"
+import {
+  curveCatmullRomClosed,
+  line,
+  polygonCentroid,
+  polygonHull,
+} from "d3"
 
 export type GraphPoint = { x: number; y: number }
 type Coordinate = [number, number]
 
-// makes the cool blobs around each motif, todo
-export function blobPath(points: readonly GraphPoint[], pad: number): string {
-  if (points.length === 0) return ""
+// The curve configuration is constant. Reusing the generator avoids creating a
+// new d3 object for every motif on every simulation frame.
+const closedBlobLine = line<Coordinate>().curve(
+  curveCatmullRomClosed.alpha(0.85),
+)
 
-  if (points.length === 1) {
+// makes the cool blobs around each motif, todo
+export function blobPath(
+  points: readonly GraphPoint[],
+  pad: number,
+  pointCount = points.length,
+): string {
+  if (pointCount === 0) return ""
+
+  if (pointCount === 1) {
     const p = points[0]
     return `M${p.x - pad},${p.y} a${pad},${pad} 0 1,0 ${pad * 2},0 a${pad},${pad} 0 1,0 ${-pad * 2},0`
   }
 
   let hullPts: Coordinate[]
-  if (points.length === 2) {
+  if (pointCount === 2) {
     const [a, b] = points
     const dx = b.x - a.x
     const dy = b.y - a.y
@@ -27,9 +42,14 @@ export function blobPath(points: readonly GraphPoint[], pad: number): string {
       [a.x - nx, a.y - ny]
     ]
   } else {
-    const hull = d3.polygonHull(points.map((p): Coordinate => [p.x, p.y]))
+    const coordinates = new Array<Coordinate>(pointCount)
+    for (let i = 0; i < pointCount; i += 1) {
+      const point = points[i]
+      coordinates[i] = [point.x, point.y]
+    }
+    const hull = polygonHull(coordinates)
     if (!hull) return ""
-    const centroid = d3.polygonCentroid(hull)
+    const centroid = polygonCentroid(hull)
     hullPts = hull.map(([x, y]) => {
       const dx = x - centroid[0]
       const dy = y - centroid[1]
@@ -38,6 +58,5 @@ export function blobPath(points: readonly GraphPoint[], pad: number): string {
     })
   }
 
-  const line = d3.line<Coordinate>().curve(d3.curveCatmullRomClosed.alpha(0.85))
-  return line(hullPts) ?? ""
+  return closedBlobLine(hullPts) ?? ""
 }

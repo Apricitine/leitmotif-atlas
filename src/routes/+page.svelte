@@ -1,6 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import * as d3 from "d3"
+  import {
+    drag,
+    forceCenter,
+    forceCollide,
+    forceLink,
+    forceManyBody,
+    forceSimulation,
+    forceX,
+    forceY,
+    select,
+    zoom,
+    zoomIdentity,
+    type Simulation,
+    type SimulationLinkDatum,
+    type SimulationNodeDatum,
+  } from "d3"
   import { motifs as motifData } from "$lib/motifs"
   import { songs as songData } from "$lib/songs"
   import { blobPath } from "$lib/graphUtils"
@@ -8,8 +23,8 @@
   type Song = (typeof songData)[number]
   type Motif = (typeof motifData)[number]
   type GraphNode = Song &
-    d3.SimulationNodeDatum & { homeX?: number; homeY?: number }
-  type GraphLink = d3.SimulationLinkDatum<GraphNode> & {
+    SimulationNodeDatum & { homeX?: number; homeY?: number }
+  type GraphLink = SimulationLinkDatum<GraphNode> & {
     source: string | GraphNode
     target: string | GraphNode
     motif: string
@@ -20,6 +35,13 @@
     target: GraphNode
   }
   type Blob = Motif & { path: string }
+  type RenderedNode = { node: GraphNode; x: number; y: number }
+  type RenderedGraphLink = ResolvedGraphLink & {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+  }
   type PanelContent =
     | { type: "song"; data: GraphNode }
     | { type: "motif"; data: Motif }
@@ -28,47 +50,58 @@
   let width = $state(0)
   let height = $state(0)
 
-  // holyyyyyy shit going crazzzy
-  let nodes = $state<GraphNode[]>(songData.map((song) => ({ ...song })))
+  // D3 updates these objects on every physics tick. They deliberately remain
+  // plain objects: `positionVersion` below batches SVG work to the display
+  // refresh rate instead of paying Svelte proxy costs for every x/y write.
+  const nodes: GraphNode[] = songData.map((song) => ({ ...song }))
   const nodeById = new Map<string, GraphNode>(
     nodes.map((node) => [node.id, node]),
   )
 
-  let links = $state<GraphLink[]>([])
-  motifData.forEach((motif) => {
+  const links: GraphLink[] = motifData.flatMap((motif) =>
     motif.songs
       .filter((id) => id !== motif.source)
-      .forEach((id) => {
-        links.push({
-          source: motif.source,
-          target: id,
-          motif: motif.id,
-          color: motif.color,
-        })
-      })
-  })
+      .map((id) => ({
+        source: motif.source,
+        target: id,
+        motif: motif.id,
+        color: motif.color,
+      })),
+  )
 
   const motifSongs = new Map<string, string[]>(
     motifData.map((motif) => [motif.id, motif.songs]),
   )
   const songMotifs = new Map<string, Motif[]>(
-    nodes.map((node) => [
-      node.id,
-      motifData.filter((motif) => motif.songs.includes(node.id)),
-    ]),
+    nodes.map((node) => [node.id, []]),
   )
   const sourceMotifs = new Map<string, Motif[]>(
-    nodes.map((node) => [
-      node.id,
-      motifData.filter((motif) => motif.source === node.id),
-    ]),
+    nodes.map((node) => [node.id, []]),
   )
+  const blobDefinitions = motifData.map((motif) => {
+    const motifNodes = motif.songs
+      .map((id) => nodeById.get(id))
+      .filter((node): node is GraphNode => node !== undefined)
+
+    motif.songs.forEach((songId) => songMotifs.get(songId)?.push(motif))
+    sourceMotifs.get(motif.source)?.push(motif)
+
+    return {
+      motif,
+      nodes: motifNodes,
+      // Reuse these coordinates on every frame instead of allocating one object
+      // per song per blob update.
+      points: motifNodes.map(() => ({ x: 0, y: 0 })),
+    }
+  })
 
   let svgEl: SVGSVGElement
-  let simulation: d3.Simulation<GraphNode, undefined> | undefined
+  let simulation: Simulation<GraphNode, undefined> | undefined
   let ready = $state(false)
+  let positionVersion = $state(0)
+  let renderFrame: number | undefined
 
-  let zoomTransform = $state.raw(d3.zoomIdentity)
+  let zoomTransform = $state.raw(zoomIdentity)
   const transformStr = $derived(
     `translate(${zoomTransform.x},${zoomTransform.y}) scale(${zoomTransform.k})`,
   )
@@ -78,17 +111,29 @@
   let isolatedMotifs = $state(new Set<string>())
   let panelContent = $state<PanelContent>(null)
 
-  const blobs = $derived.by<Blob[]>(() =>
-    motifData.map((motif) => {
-      const points = motif.songs.flatMap((id) => {
-        const node = nodes.find((candidate) => candidate.id === id)
-        return node?.x !== undefined && node.y !== undefined
-          ? [{ x: node.x, y: node.y }]
-          : []
-      })
-      return { ...motif, path: blobPath(points, 30) }
-    }),
-  )
+  const blobs = $derived.by<Blob[]>(() => {
+    positionVersion
+    return blobDefinitions.map(({ motif, nodes: motifNodes, points }) => {
+      let pointCount = 0
+      for (let i = 0; i < motifNodes.length; i += 1) {
+        const node = motifNodes[i]
+        if (node.x === undefined || node.y === undefined) continue
+        points[pointCount].x = node.x
+        points[pointCount].y = node.y
+        pointCount += 1
+      }
+      return { ...motif, path: blobPath(points, 30, pointCount) }
+    })
+  })
+
+  const renderedNodes = $derived.by<RenderedNode[]>(() => {
+    positionVersion
+    return nodes.map((node) => ({
+      node,
+      x: node.x ?? 0,
+      y: node.y ?? 0,
+    }))
+  })
 
   const activeSongs = $derived(
     hoveredSong
@@ -109,7 +154,24 @@
         : null,
   )
 
-  const resolvedLinks = $derived(ready ? (links as ResolvedGraphLink[]) : [])
+  const isolatedSongs = $derived.by(() => {
+    if (isolatedMotifs.size === 0) return null
+
+    const songs = new Set<string>()
+    isolatedMotifs.forEach((id) => {
+      for (const song of motifSongs.get(id) ?? []) songs.add(song)
+    })
+    return songs
+  })
+
+  const renderedLinks = $derived.by<RenderedGraphLink[]>(() => {
+    if (!ready) return []
+    positionVersion
+    return (links as ResolvedGraphLink[]).map((link) => ({
+      ...link,
+      ...linkGeometry(link.source, link.target, 11, 14),
+    }))
+  })
 
   function getSongMotifs(songId: string) {
     return songMotifs.get(songId) ?? []
@@ -125,13 +187,7 @@
 
   function nodeOpacity(node: GraphNode) {
     if (activeSongs) return activeSongs.has(node.id) ? 1 : 0.15
-    if (isolatedMotifs.size > 0) {
-      const active = new Set<string>()
-      isolatedMotifs.forEach((id) =>
-        (motifSongs.get(id) ?? []).forEach((song) => active.add(song)),
-      )
-      return active.has(node.id) ? 1 : 0.12
-    }
+    if (isolatedSongs) return isolatedSongs.has(node.id) ? 1 : 0.12
     return 1
   }
 
@@ -148,59 +204,85 @@
     return 1
   }
 
-  function edgePoint(from: GraphNode, to: GraphNode, r: number) {
+  function linkGeometry(
+    from: GraphNode,
+    to: GraphNode,
+    sourceRadius: number,
+    targetRadius: number,
+  ) {
     if (
       from.x === undefined ||
       from.y === undefined ||
       to.x === undefined ||
       to.y === undefined
     ) {
-      return { x: 0, y: 0 }
+      return { x1: 0, y1: 0, x2: 0, y2: 0 }
     }
     const dx = to.x - from.x
     const dy = to.y - from.y
     const len = Math.sqrt(dx * dx + dy * dy) || 1
-    return { x: from.x + (dx / len) * r, y: from.y + (dy / len) * r }
+    const unitX = dx / len
+    const unitY = dy / len
+    return {
+      x1: from.x + unitX * sourceRadius,
+      y1: from.y + unitY * sourceRadius,
+      x2: to.x - unitX * targetRadius,
+      y2: to.y - unitY * targetRadius,
+    }
+  }
+
+  function scheduleRender() {
+    if (renderFrame !== undefined) return
+    renderFrame = requestAnimationFrame(() => {
+      renderFrame = undefined
+      positionVersion += 1
+    })
   }
 
   onMount(() => {
     width = window.innerWidth
     height = window.innerHeight
 
-    simulation = d3
-      .forceSimulation<GraphNode>(nodes)
+    simulation = forceSimulation<GraphNode>(nodes)
       .force(
         "link",
-        d3
-          .forceLink<GraphNode, GraphLink>(links)
+        forceLink<GraphNode, GraphLink>(links)
           .id((node) => node.id)
           .distance(95)
           .strength(0.35),
       )
-      .force("charge", d3.forceManyBody().strength(-260))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide(38))
+      .force("charge", forceManyBody().strength(-260))
+      .force("center", forceCenter(width / 2, height / 2))
+      .force("collide", forceCollide<GraphNode>(38))
       .velocityDecay(0.35)
+      .on("tick", scheduleRender)
       .on("end", settleHomes)
 
     ready = true
+    scheduleRender()
 
-    const zoom = d3
-      .zoom<SVGSVGElement, unknown>()
+    const zoomBehavior = zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.4, 2.5])
       .on("zoom", (event) => {
         zoomTransform = event.transform
       })
-    d3.select(svgEl).call(zoom)
+    select(svgEl).call(zoomBehavior)
 
+    let resizeFrame: number | undefined
     const onResize = () => {
-      width = window.innerWidth
-      height = window.innerHeight
-      simulation?.force("center", d3.forceCenter(width / 2, height / 2))
+      if (resizeFrame !== undefined) return
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = undefined
+        width = window.innerWidth
+        height = window.innerHeight
+        simulation?.force("center", forceCenter(width / 2, height / 2))
+      })
     }
     window.addEventListener("resize", onResize)
     return () => {
       window.removeEventListener("resize", onResize)
+      if (renderFrame !== undefined) cancelAnimationFrame(renderFrame)
+      if (resizeFrame !== undefined) cancelAnimationFrame(resizeFrame)
       simulation?.stop()
     }
   })
@@ -214,18 +296,17 @@
     simulation
       ?.force(
         "anchorX",
-        d3.forceX<GraphNode>((node) => node.homeX ?? 0).strength(0.15),
+        forceX<GraphNode>((node) => node.homeX ?? 0).strength(0.15),
       )
       .force(
         "anchorY",
-        d3.forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15),
+        forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15),
       )
   }
 
   // svelte related stuff for dragging nodes
   function dragNode(el: SVGCircleElement, node: GraphNode) {
-    const behavior = d3
-      .drag<SVGCircleElement, GraphNode>()
+    const behavior = drag<SVGCircleElement, GraphNode>()
       .on("start", (event) => {
         if (!event.active) simulation?.alphaTarget(0.35).restart()
         node.fx = node.x
@@ -240,10 +321,10 @@
         node.fx = null
         node.fy = null
       })
-    d3.select<SVGCircleElement, GraphNode>(el).datum(node).call(behavior)
+    select<SVGCircleElement, GraphNode>(el).datum(node).call(behavior)
     return {
       destroy() {
-        d3.select(el).on(".drag", null)
+        select(el).on(".drag", null)
       },
     }
   }
@@ -364,14 +445,12 @@
           />
         {/each}
 
-        {#each resolvedLinks as link (link.source.id + "-" + link.target.id + "-" + link.motif)}
-          {@const start = edgePoint(link.source, link.target, 11)}
-          {@const end = edgePoint(link.target, link.source, 14)}
+        {#each renderedLinks as link (link.source.id + "-" + link.target.id + "-" + link.motif)}
           <line
-            x1={start.x}
-            y1={start.y}
-            x2={end.x}
-            y2={end.y}
+            x1={link.x1}
+            y1={link.y1}
+            x2={link.x2}
+            y2={link.y2}
             stroke={link.color}
             stroke-width="1.4"
             opacity={linkOpacity(link)}
@@ -379,11 +458,12 @@
           />
         {/each}
 
-        {#each nodes as node (node.id)}
+        {#each renderedNodes as positionedNode (positionedNode.node.id)}
+          {@const node = positionedNode.node}
           {#each getSourceMotifs(node.id) as m, i (m.id)}
             <circle
-              cx={node.x}
-              cy={node.y}
+              cx={positionedNode.x}
+              cy={positionedNode.y}
               r={14 + i * 4}
               fill="none"
               stroke={m.color}
@@ -394,8 +474,8 @@
             />
           {/each}
           <circle
-            cx={node.x}
-            cy={node.y}
+            cx={positionedNode.x}
+            cy={positionedNode.y}
             r="9"
             fill="var(--node)"
             stroke="var(--node-stroke)"
@@ -417,8 +497,8 @@
             onmouseleave={() => (hoveredSong = null)}
           />
           <text
-            x={node.x}
-            y={(node.y ?? 0) - 14}
+            x={positionedNode.x}
+            y={positionedNode.y - 14}
             text-anchor="middle"
             class="song-label"
             opacity={nodeOpacity(node)}>{node.title}</text
