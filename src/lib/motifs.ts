@@ -375,6 +375,7 @@ export const motifs = [
     color: "#474747",
     source: "card-castle",
     songs: [
+      "card-castle",
       "chaos-king",
       "basement"
     ]
