@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { fade, fly } from "svelte/transition"
   import {
     drag,
     forceCenter,
@@ -111,29 +110,6 @@
   let hoveredMotif = $state<string | null>(null)
   let isolatedMotifs = $state(new Set<string>())
   let panelContent = $state<PanelContent>(null)
-  let motifQuery = $state("")
-  let songQuery = $state("")
-  let songSearchEl: HTMLInputElement
-
-  const visibleMotifs = $derived.by(() => {
-    const query = motifQuery.trim().toLocaleLowerCase()
-    if (!query) return motifData
-
-    return motifData.filter((motif) =>
-      `${motif.name} ${motif.id}`.toLocaleLowerCase().includes(query),
-    )
-  })
-
-  const songResults = $derived.by(() => {
-    const query = songQuery.trim().toLocaleLowerCase()
-    if (!query) return []
-
-    return nodes
-      .filter((song) =>
-        `${song.title} ${song.id}`.toLocaleLowerCase().includes(query),
-      )
-      .slice(0, 6)
-  })
 
   const blobs = $derived.by<Blob[]>(() => {
     positionVersion
@@ -303,25 +279,8 @@
       })
     }
     window.addEventListener("resize", onResize)
-    const focusSongSearch = (event: KeyboardEvent) => {
-      const target = event.target
-      if (
-        event.key !== "/" ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.altKey ||
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement
-      ) {
-        return
-      }
-      event.preventDefault()
-      songSearchEl?.focus()
-    }
-    window.addEventListener("keydown", focusSongSearch)
     return () => {
       window.removeEventListener("resize", onResize)
-      window.removeEventListener("keydown", focusSongSearch)
       if (renderFrame !== undefined) cancelAnimationFrame(renderFrame)
       if (resizeFrame !== undefined) cancelAnimationFrame(resizeFrame)
       simulation?.stop()
@@ -379,10 +338,6 @@
   function openSong(node: GraphNode) {
     panelContent = { type: "song", data: node }
   }
-  function openSongFromSearch(node: GraphNode) {
-    openSong(node)
-    songQuery = ""
-  }
   function openMotif(motif: Motif) {
     panelContent = { type: "motif", data: motif }
   }
@@ -408,94 +363,23 @@
 </script>
 
 <div class="atlas">
-  <header class="page-header">
+  <header>
     <h1>DELTARUNE LEITMOTIF ATLAS</h1>
     <p>work in progress obv</p>
   </header>
 
-  <div class="song-search">
-    <label class="search-label" for="song-search">Search every song</label>
-    <div class="search-field">
-      <span class="search-icon" aria-hidden="true">⌕</span>
-      <input
-        bind:this={songSearchEl}
-        bind:value={songQuery}
-        id="song-search"
-        type="search"
-        placeholder="Search songs..."
-        autocomplete="off"
-        aria-controls="song-results"
-      />
-      <kbd>/</kbd>
-      {#if songQuery}
-        <button
-          class="clear-search"
-          aria-label="Clear song search"
-          onclick={() => (songQuery = "")}
-        >&times;</button>
-      {/if}
-    </div>
-
-    {#if songQuery.trim()}
-      <div id="song-results" class="search-results" transition:fade={{ duration: 140 }}>
-        {#if songResults.length > 0}
-          {#each songResults as song, i (song.id)}
-            <button
-              class="search-result"
-              style={`--enter-delay: ${i * 35}ms`}
-              onclick={() => openSongFromSearch(song)}
-            >
-              <span>{song.title}</span>
-              <small>Chapter {song.chapter}</small>
-            </button>
-          {/each}
-        {:else}
-          <p class="search-empty">No songs found.</p>
-        {/if}
-      </div>
-    {/if}
-  </div>
-
   <div class="legend">
-    <label class="search-label" for="motif-search">Find a motif</label>
-    <div class="search-field motif-search">
-      <span class="search-icon" aria-hidden="true">⌕</span>
-      <input
-        bind:value={motifQuery}
-        id="motif-search"
-        type="search"
-        placeholder="Search motifs..."
-        autocomplete="off"
-      />
-      {#if motifQuery}
-        <button
-          class="clear-search"
-          aria-label="Clear motif search"
-          onclick={() => (motifQuery = "")}
-        >&times;</button>
-      {/if}
-    </div>
-
-    <div class="motif-list">
-      {#each visibleMotifs as motif, i (motif.id)}
-        <button
-          class="chip"
-          class:dimmed={isolatedMotifs.size > 0 && !isolatedMotifs.has(motif.id)}
-          class:selected={isolatedMotifs.has(motif.id)}
-          style={`--enter-delay: ${Math.min(i, 10) * 30}ms; --motif-color: ${motif.color}`}
-          aria-pressed={isolatedMotifs.has(motif.id)}
-          onclick={() => toggleMotif(motif.id)}
-        >
-          <span class="dot" style:background={motif.color}></span>
-          <span class="chip-name">{motif.name}</span>
-          {#if isolatedMotifs.has(motif.id)}
-            <span class="selection-mark" aria-label="Selected">✓</span>
-          {/if}
-        </button>
-      {:else}
-        <p class="search-empty">No motifs found.</p>
-      {/each}
-    </div>
+    
+    {#each motifData as motif (motif.id)}
+      <button
+        class="chip"
+        class:dimmed={isolatedMotifs.size > 0 && !isolatedMotifs.has(motif.id)}
+        onclick={() => toggleMotif(motif.id)}
+      >
+        <span class="dot" style:background={motif.color}></span>
+        {motif.name}
+      </button>
+    {/each}
   </div>
 
   <svg bind:this={svgEl} viewBox="0 0 {width} {height}" use:closePanelOnClick>
@@ -526,7 +410,7 @@
     </defs>
 
     {#if ready}
-      <g class="graph-root" transform={transformStr}>
+      <g transform={transformStr}>
         {#each blobs as motif (motif.id)}
           <path
             d={motif.path}
@@ -625,11 +509,7 @@
   </svg>
 
   {#if panelContent}
-    <aside
-      class="panel open"
-      in:fly={{ x: 28, duration: 240 }}
-      out:fly={{ x: 28, duration: 160 }}
-    >
+    <aside class="panel open">
       <button class="panel-close" onclick={closePanel}>&times;</button>
 
       {#if panelContent.type === "song"}
@@ -688,34 +568,19 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
-    isolation: isolate;
     color: var(--text);
     font-family: "Space Grotesk", sans-serif;
   }
 
-  .atlas::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    inset: -20%;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 18% 18%, rgba(172, 77, 255, 0.1), transparent 30%),
-      radial-gradient(circle at 76% 74%, rgba(246, 119, 16, 0.08), transparent 28%);
-    animation: ambient-drift 16s ease-in-out infinite alternate;
-  }
-
-  .page-header {
+  header {
     position: absolute;
     top: 22px;
     left: 26px;
     z-index: 5;
     pointer-events: none;
-    animation: rise-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .page-header h1 {
+  header h1 {
     font-family: "Press Start 2P", monospace;
     font-size: 14px;
     letter-spacing: 1px;
@@ -723,7 +588,7 @@
     text-shadow: 0 0 14px rgba(241, 238, 249, 0.3);
   }
 
-  .page-header p {
+  header p {
     margin: 0;
     font-size: 13px;
     color: var(--muted);
@@ -732,275 +597,56 @@
 
   .legend {
     position: absolute;
-    top: 92px;
+    top: 22px;
     right: 26px;
     z-index: 5;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    width: min(260px, calc(100vw - 52px));
-    max-height: calc(100vh - 114px);
-    overflow: hidden;
-    animation: rise-in 0.55s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+    align-items: flex-end;
+    height: 90vh;
+    overflow: scroll;
   }
 
-  .song-search {
-    position: absolute;
-    top: 22px;
-    right: 26px;
-    z-index: 6;
-    width: min(260px, calc(100vw - 52px));
-    animation: rise-in 0.55s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .search-label {
-    display: block;
-    margin: 0 0 4px 4px;
-    color: var(--muted);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .search-field {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 34px;
-    padding: 0 9px;
-    border: 1px solid var(--panel-border);
-    border-radius: 10px;
-    background: rgba(21, 18, 31, 0.9);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .search-field:focus-within {
-    border-color: rgba(207, 201, 232, 0.52);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
-    transform: translateY(-1px);
-  }
-
-  .search-icon {
-    color: var(--muted);
-    font-size: 18px;
-    line-height: 1;
-    transform: rotate(-18deg);
-  }
-
-  .search-field input {
-    width: 100%;
-    min-width: 0;
-    border: 0;
-    background: transparent;
-    color: var(--text);
-    font: inherit;
-    font-size: 12px;
-  }
-
-  .search-field input::placeholder {
-    color: var(--muted);
-  }
-
-  kbd {
-    flex: 0 0 auto;
-    padding: 1px 5px;
-    border: 1px solid var(--panel-border);
-    border-radius: 4px;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 10px;
-  }
-
-  .clear-search {
-    flex: 0 0 auto;
-    border: 0;
-    border-radius: 50%;
-    width: 19px;
-    height: 19px;
-    padding: 0;
-    background: rgba(241, 238, 249, 0.1);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    transition: background 0.16s ease, transform 0.16s ease;
-  }
-
-  .clear-search:hover {
-    background: rgba(241, 238, 249, 0.2);
-    transform: rotate(90deg);
-  }
-
-  .search-results {
-    display: grid;
-    gap: 4px;
-    margin-top: 7px;
-    padding: 6px;
-    border: 1px solid var(--panel-border);
-    border-radius: 10px;
-    background: rgba(21, 18, 31, 0.96);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
-  }
-
-  .search-result {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
-    padding: 7px 8px;
-    border: 0;
-    border-radius: 7px;
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    font: inherit;
-    font-size: 11px;
-    text-align: left;
-    animation: result-enter 0.28s var(--enter-delay, 0ms) both;
-    transition: background 0.16s ease, transform 0.16s ease;
-  }
-
-  .search-result:hover,
-  .search-result:focus-visible {
-    background: rgba(241, 238, 249, 0.08);
-    transform: translateX(3px);
-  }
-
-  .search-result small {
-    flex: 0 0 auto;
-    color: var(--muted);
-    font-size: 10px;
-  }
-
-  .search-empty {
-    margin: 0;
-    padding: 8px 9px;
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  .motif-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow-y: auto;
-    padding: 1px 2px 12px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(241, 238, 249, 0.2) transparent;
-  }
-
-  .motif-list::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .motif-list::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: rgba(241, 238, 249, 0.2);
+  .legend::-webkit-scrollbar {
+    display: none
   }
 
   .chip {
     display: flex;
     align-items: center;
-    gap: 7px;
-    width: 100%;
+    gap: 8px;
     background: var(--panel);
     border: 1px solid var(--panel-border);
     border-radius: 999px;
-    padding: 5px 10px;
-    font-size: 11px;
+    padding: 6px 14px 6px 10px;
+    font-size: 12px;
     font-family: inherit;
     color: var(--text);
     cursor: pointer;
     user-select: none;
-    text-align: left;
-    animation: chip-enter 0.36s var(--enter-delay, 0ms) both;
-    transition:
-      opacity 0.2s ease,
-      background 0.2s ease,
-      border-color 0.2s ease,
-      transform 0.2s ease;
+    transition: opacity 0.2s ease;
   }
 
   .chip.dimmed {
     opacity: 0.35;
   }
 
-  .chip.selected {
-    border-color: var(--motif-color);
-    background: rgba(42, 35, 57, 0.98);
-    box-shadow: inset 0 0 0 1px var(--motif-color), 0 0 14px rgba(0, 0, 0, 0.2);
-  }
-
-  .chip:hover,
-  .chip:focus-visible {
-    border-color: rgba(241, 238, 249, 0.28);
-    background: rgba(35, 30, 48, 0.96);
-    transform: translateX(-3px);
-  }
-
-  .chip.selected:hover,
-  .chip.selected:focus-visible {
-    border-color: var(--motif-color);
-    background: rgba(42, 35, 57, 0.98);
-  }
-
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     flex-shrink: 0;
     display: inline-block;
-    box-shadow: 0 0 0 transparent;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-  }
-
-  .chip-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .selection-mark {
-    margin-left: auto;
-    color: var(--motif-color);
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1;
-    animation: selection-pop 0.2s ease-out both;
-  }
-
-  .chip:hover .dot,
-  .chip:focus-visible .dot {
-    box-shadow: 0 0 10px var(--motif-color);
-    transform: scale(1.14);
   }
 
   svg {
-    position: relative;
-    z-index: 1;
     width: 100%;
     height: 100%;
     cursor: grab;
   }
   svg:active {
     cursor: grabbing;
-  }
-
-  .graph-root {
-    animation: graph-reveal 0.6s 0.15s ease-out both;
-  }
-
-  .graph-root path,
-  .graph-root line,
-  .graph-root circle,
-  .graph-root text {
-    transition: opacity 0.18s ease;
   }
 
   :global(.song-label) {
@@ -1020,7 +666,6 @@
     z-index: 10;
     padding: 26px 22px;
     overflow-y: auto;
-    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.24);
   }
 
   .panel-close {
@@ -1032,13 +677,6 @@
     position: absolute;
     top: 18px;
     right: 18px;
-    transition: color 0.16s ease, transform 0.16s ease;
-  }
-
-  .panel-close:hover,
-  .panel-close:focus-visible {
-    color: var(--text);
-    transform: rotate(90deg) scale(1.1);
   }
 
   .panel h2 {
@@ -1078,12 +716,6 @@
     color: var(--text);
     padding: 4px 0;
     border-bottom: 1px solid var(--panel-border);
-    transition: background 0.16s ease, padding-left 0.16s ease;
-  }
-
-  .related-song:hover {
-    padding-left: 4px;
-    background: rgba(241, 238, 249, 0.04);
   }
 
   .hint {
@@ -1095,108 +727,5 @@
     margin: 0;
     z-index: 5;
     pointer-events: none;
-    animation: rise-in 0.55s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  @keyframes rise-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes chip-enter {
-    from {
-      opacity: 0;
-      transform: translateX(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes result-enter {
-    from {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes selection-pop {
-    from {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes graph-reveal {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes ambient-drift {
-    from { transform: translate3d(-2%, -1%, 0) scale(1); }
-    to { transform: translate3d(2%, 1%, 0) scale(1.04); }
-  }
-
-  @media (max-width: 720px) {
-    .page-header {
-      top: 16px;
-      left: 16px;
-    }
-
-    .page-header h1 {
-      font-size: 11px;
-      line-height: 1.5;
-      max-width: 220px;
-    }
-
-    .song-search {
-      top: 94px;
-      right: 16px;
-      width: min(260px, calc(100vw - 32px));
-    }
-
-    .legend {
-      top: 148px;
-      right: 12px;
-      width: min(260px, calc(100vw - 24px));
-      max-height: calc(100vh - 202px);
-    }
-
-    .panel {
-      box-sizing: border-box;
-      width: min(300px, 100vw);
-    }
-
-    .hint {
-      bottom: 12px;
-      left: 16px;
-      max-width: 250px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      scroll-behavior: auto !important;
-      transition-duration: 0.01ms !important;
-    }
   }
 </style>
