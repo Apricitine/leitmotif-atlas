@@ -1861,11 +1861,6 @@
     gap: 8px;
   }
 
-  .audio-card-heading .eyebrow {
-    margin: 0 0 3px;
-    font-size: 8px;
-  }
-
   .audio-card-heading strong {
     font-size: 11px;
   }

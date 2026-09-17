@@ -144,7 +144,12 @@ export const motifs: Motif[] = [
       "a-dark-zone",
       "the-third-sanctuary",
       "4rd-sanctuary"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=PibYmujLubI",
+      startSeconds: 0,
+      endSeconds: 108,
+    },
   },
   {
     id: "dark-sanctuary",
