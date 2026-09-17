@@ -70,7 +70,12 @@ export const motifs: Motif[] = [
       "garden-of-hopes-and-dreams",
       "before-the-story",
       "once-upon-a-time"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=3BR7-AzE2dQ",
+      startSeconds: 0,
+      endSeconds: 65,
+    },
   },
   {
     id: "chase",
@@ -83,7 +88,12 @@ export const motifs: Motif[] = [
       "the-world-revolving",
       "black-knife",
       "that-day"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=hWWVWfQW1H4",
+      startSeconds: 11,
+      endSeconds: 33,
+    },
   },
   {
     id: "freedom",
@@ -99,7 +109,12 @@ export const motifs: Motif[] = [
       "hammer-of-justice",
       "inappropriate-recycling",
       "airwaves",
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=Z01Tsgwe2dQ",
+      startSeconds: 20,
+      endSeconds: 40,
+    },
   },
   {
     id: "hometown",
@@ -177,7 +192,12 @@ export const motifs: Motif[] = [
       "ferris-wheel",
       "girl-next-door",
       "raise-up-your-bat"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=P89rxnT7lKw",
+      startSeconds: 0,
+      endSeconds: 24,
+    },
   },
   {
     id: "girl-next-door",
