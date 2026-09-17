@@ -1,6 +1,23 @@
 import { songs } from "$lib/songs"
 
-export const motifs = [
+export type MotifClip = {
+  // Paste the YouTube link and the motif's exact section here. Times are seconds.
+  // Example: { youtubeUrl: "https://youtu.be/VIDEO_ID", startSeconds: 80, endSeconds: 108 }
+  youtubeUrl: string
+  startSeconds: number
+  endSeconds: number
+}
+
+export type Motif = {
+  id: string
+  name: string
+  color: string
+  source: string
+  songs: string[]
+  clip?: MotifClip
+}
+
+export const motifs: Motif[] = [
   {
     id: "dont-forget",
     name: "Don't Forget (motif)",
