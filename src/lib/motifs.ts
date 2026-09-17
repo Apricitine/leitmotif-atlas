@@ -271,7 +271,12 @@ export const motifs: Motif[] = [
       "nows-your-chance-to-be-a",
       "catswing",
       "airwaves"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=cSm5gKlmw2M",
+      startSeconds: 0,
+      endSeconds: 9.5,
+    }
   },
   {
     id: "tenna",
@@ -495,7 +500,12 @@ export const motifs: Motif[] = [
       "hammer-of-justice",
       "battle-against-a-true-hero",
       "need-a-hand"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=oHZDWwW6iXs",
+      startSeconds: 25.5,
+      endSeconds: 38,
+    }
   },
   {
     id: "spear-of-justice",
@@ -508,19 +518,29 @@ export const motifs: Motif[] = [
       "fireplace",
       "hammer-of-justice",
       "need-a-hand"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=XGzYhJcm-Jw",
+      startSeconds: 0,
+      endSeconds: 5.75,
+    }
   },
   {
     id: "gerson",
     name: "Gerson",
     color: "#951e8d",
-    source: "gyaa-ha-ha",
+    source: "wise-words",
     songs: [
       "gyaa-ha-ha",
       "wise-words",
       "hammer-of-justice",
       "need-a-hand"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=JkEhQ3qJubU",
+      startSeconds: 0,
+      endSeconds: 19,
+    }
   },
   {
     id: "power-of-neo",
@@ -703,7 +723,12 @@ export const motifs: Motif[] = [
       "im-telling",
       "cutie-mew-mew-magic",
       "pink-theme-mad"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=5B9N1ALeLPo",
+      startSeconds: 0,
+      endSeconds: 45,
+    }
   },
   {
     id: "keygen",
@@ -724,7 +749,12 @@ export const motifs: Motif[] = [
     songs: [
       "ruder-buster",
       "catswing",
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=_A8SQAQ_yRo",
+      startSeconds: 51.5,
+      endSeconds: 55.5,
+    }
   },
   {
     id: "checker-dance",

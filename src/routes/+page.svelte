@@ -3,19 +3,9 @@
   import {
     drag,
     easeCubicOut,
-    forceCenter,
-    forceCollide,
-    forceLink,
-    forceManyBody,
-    forceSimulation,
-    forceX,
-    forceY,
     select,
     zoom,
     zoomIdentity,
-    type Simulation,
-    type SimulationLinkDatum,
-    type SimulationNodeDatum,
     type ZoomBehavior,
   } from "d3"
   import { motifs as motifData, type MotifClip } from "$lib/motifs"
@@ -24,9 +14,8 @@
 
   type Song = (typeof songData)[number]
   type Motif = (typeof motifData)[number]
-  type GraphNode = Song &
-    SimulationNodeDatum & { homeX?: number; homeY?: number }
-  type GraphLink = SimulationLinkDatum<GraphNode> & {
+  type GraphNode = Song & { x?: number; y?: number }
+  type GraphLink = {
     source: string | GraphNode
     target: string | GraphNode
     motif: string
@@ -92,9 +81,9 @@
   let width = $state(0)
   let height = $state(0)
 
-  // D3 updates these objects on every physics tick. They deliberately remain
-  // plain objects: `positionVersion` below batches SVG work to the display
-  // refresh rate instead of paying Svelte proxy costs for every x/y write.
+  // Position messages from the physics worker update these plain objects.
+  // `positionVersion` below batches SVG work to the display refresh rate,
+  // avoiding Svelte proxy costs for every x/y write.
   const nodes: GraphNode[] = songData.map((song) => ({ ...song }))
   const nodeById = new Map<string, GraphNode>(
     nodes.map((node) => [node.id, node]),
@@ -110,6 +99,11 @@
         color: motif.color,
       })),
   )
+  const resolvedLinks: ResolvedGraphLink[] = links.map((link) => ({
+    ...link,
+    source: nodeById.get(link.source as string)!,
+    target: nodeById.get(link.target as string)!,
+  }))
 
   // Routes are intentionally undirected: a shared motif is useful to trace in
   // either musical direction, even though the arrows still show its source.
@@ -148,7 +142,7 @@
   })
 
   let svgEl: SVGSVGElement
-  let simulation: Simulation<GraphNode, undefined> | undefined
+  let physicsWorker: Worker | undefined
   let zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> | undefined
   let searchInput: HTMLInputElement | undefined
   let youtubeHost: HTMLDivElement
@@ -267,7 +261,7 @@
   const renderedLinks = $derived.by<RenderedGraphLink[]>(() => {
     if (!ready) return []
     positionVersion
-    return (links as ResolvedGraphLink[]).map((link) => ({
+    return resolvedLinks.map((link) => ({
       ...link,
       ...linkGeometry(link.source, link.target, 11, 14),
     }))
@@ -322,8 +316,10 @@
   }
 
   function linkOpacity(link: GraphLink) {
+    const sourceId = typeof link.source === "string" ? link.source : link.source.id
+    const targetId = typeof link.target === "string" ? link.target : link.target.id
     if (trace) {
-      return trace.edgeKeys.has(routeEdgeKey(link.source as string, link.target as string))
+      return trace.edgeKeys.has(routeEdgeKey(sourceId, targetId))
         ? 1
         : 0.035
     }
@@ -369,6 +365,14 @@
       renderFrame = undefined
       positionVersion += 1
     })
+  }
+
+  function applyPhysicsPositions(positions: Float64Array) {
+    for (let index = 0; index < nodes.length; index += 1) {
+      nodes[index].x = positions[index * 2]
+      nodes[index].y = positions[index * 2 + 1]
+    }
+    scheduleRender()
   }
 
   function extractYouTubeId(value: string) {
@@ -523,23 +527,25 @@
     const onMotionChange = () => (reduceMotion = motionQuery.matches)
     motionQuery.addEventListener("change", onMotionChange)
 
-    simulation = forceSimulation<GraphNode>(nodes)
-      .force(
-        "link",
-        forceLink<GraphNode, GraphLink>(links)
-          .id((node) => node.id)
-          .distance(95)
-          .strength(0.35),
-      )
-      .force("charge", forceManyBody().strength(-260))
-      .force("center", forceCenter(width / 2, height / 2))
-      .force("collide", forceCollide<GraphNode>(38))
-      .velocityDecay(0.35)
-      .on("tick", scheduleRender)
-      .on("end", settleHomes)
-
-    ready = true
-    scheduleRender()
+    physicsWorker = new Worker(new URL("../lib/physics.worker.ts", import.meta.url), {
+      type: "module",
+    })
+    physicsWorker.onmessage = (
+      event: MessageEvent<{ type: "ready" | "positions"; positions: Float64Array }>,
+    ) => {
+      applyPhysicsPositions(event.data.positions)
+      if (event.data.type === "ready") ready = true
+    }
+    physicsWorker.postMessage({
+      type: "initialize",
+      width,
+      height,
+      nodes: nodes.map(({ id }) => ({ id })),
+      links: links.map((link) => ({
+        source: link.source as string,
+        target: link.target as string,
+      })),
+    })
 
     zoomBehavior = zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.4, 2.5])
@@ -555,7 +561,7 @@
         resizeFrame = undefined
         width = window.innerWidth
         height = window.innerHeight
-        simulation?.force("center", forceCenter(width / 2, height / 2))
+        physicsWorker?.postMessage({ type: "resize", width, height })
       })
     }
     window.addEventListener("resize", onResize)
@@ -565,44 +571,39 @@
       if (renderFrame !== undefined) cancelAnimationFrame(renderFrame)
       if (resizeFrame !== undefined) cancelAnimationFrame(resizeFrame)
       select(svgEl).interrupt("focus")
-      simulation?.stop()
+      physicsWorker?.terminate()
+      physicsWorker = undefined
       youtubePlayer?.destroy()
     }
   })
-
-  // code to resolve the physics w all hte bounciness
-  function settleHomes() {
-    nodes.forEach((node) => {
-      node.homeX = node.x
-      node.homeY = node.y
-    })
-    simulation
-      ?.force(
-        "anchorX",
-        forceX<GraphNode>((node) => node.homeX ?? 0).strength(0.15),
-      )
-      .force(
-        "anchorY",
-        forceY<GraphNode>((node) => node.homeY ?? 0).strength(0.15),
-      )
-  }
 
   // svelte related stuff for dragging nodes
   function dragNode(el: SVGCircleElement, node: GraphNode) {
     const behavior = drag<SVGCircleElement, GraphNode>()
       .on("start", (event) => {
-        if (!event.active) simulation?.alphaTarget(0.35).restart()
-        node.fx = node.x
-        node.fy = node.y
+        node.x = event.x
+        node.y = event.y
+        physicsWorker?.postMessage({
+          type: "drag-start",
+          nodeId: node.id,
+          x: event.x,
+          y: event.y,
+        })
+        scheduleRender()
       })
       .on("drag", (event) => {
-        node.fx = event.x
-        node.fy = event.y
+        node.x = event.x
+        node.y = event.y
+        physicsWorker?.postMessage({
+          type: "drag",
+          nodeId: node.id,
+          x: event.x,
+          y: event.y,
+        })
+        scheduleRender()
       })
-      .on("end", (event) => {
-        if (!event.active) simulation?.alphaTarget(0)
-        node.fx = null
-        node.fy = null
+      .on("end", () => {
+        physicsWorker?.postMessage({ type: "drag-end", nodeId: node.id })
       })
     select<SVGCircleElement, GraphNode>(el).datum(node).call(behavior)
     return {
