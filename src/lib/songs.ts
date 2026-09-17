@@ -244,7 +244,7 @@ export const songs = [
   { id: "pink-theme-mad", title: "pink_theme_mad", chapter: 5, unlisted: true },
   { id: "dog-balloon", title: "dog_balloon", chapter: 5, unlisted: true },
   {
-    id: "deltarune-piano-collections-by-trevor-alan-gomes",
+    id: "chapter-5-man",
     title: "deltarune_piano_collections_by_trevor_alan_gomes",
     chapter: 5,
     unlisted: true
@@ -266,5 +266,8 @@ export const songs = [
   { id: "spooktune", title: "Spooktune", chapter: 8 },
   { id: "battle-against-a-true-hero", title: "Battle Against a True Hero", chapter: 8 },
   { id: "burn-in-despair", title: "BURN IN DESPAIR", chapter: 8 },
+  { id: "dating-start", title: "Dating Start!", chapter: 8 },
+  { id: "uwa-so-temperate", title: "Uwa!! So temperate♫", chapter: 8 },
+  { id: "its-raining-somewhere-else", title: "It's Raining Somewhere Else", chapter: 8 },
 
 ]

@@ -147,7 +147,8 @@ export const motifs: Motif[] = [
       "a-dark-zone",
       "the-third-sanctuary",
       "4rd-sanctuary",
-      "kris-piano-last-prophecy"
+      "kris-piano-last-prophecy",
+      "old-wooden-rafters"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=PibYmujLubI",
@@ -200,7 +201,8 @@ export const motifs: Motif[] = [
       "lost-girl",
       "ferris-wheel",
       "girl-next-door",
-      "raise-up-your-bat"
+      "raise-up-your-bat",
+      "chapter-5-weird-monologue-deep"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=P89rxnT7lKw",
@@ -301,7 +303,8 @@ export const motifs: Motif[] = [
       "board-clear",
       "sword",
       "query",
-      "and-now-for-todays-sponsors"
+      "and-now-for-todays-sponsors",
+      "king-of-rolypoly"
     ]
   },
   {
@@ -336,7 +339,8 @@ export const motifs: Motif[] = [
     source: "flashback-excerpt",
     songs: [
       "flashback-excerpt",
-      "northernlight"
+      "northernlight",
+      "chapter-5-weird-monologue-deep"
     ]
   },
   {
@@ -382,7 +386,9 @@ export const motifs: Motif[] = [
       "im-telling",
       "petal-dance",
       "flower-castle",
-      "violet-tactics"
+      "violet-tactics",
+      "loving-steps",
+      "thousand-cafe-zukan"
     ]
   },
   {
@@ -419,7 +425,9 @@ export const motifs: Motif[] = [
       "dig-dig-to-the-center-of-the-earth",
       "vs-lancer",
       "card-castle",
-      "its-pronounced-rules"
+      "its-pronounced-rules",
+      "kris-piano-lancer-waltz"
+
     ]
   },
   {
@@ -429,7 +437,8 @@ export const motifs: Motif[] = [
     source: "rouxls-kaard",
     songs: [
       "rouxls-kaard",
-      "its-pronounced-rules"
+      "its-pronounced-rules",
+      "kris-piano-rouxls",
     ]
   },
   {
@@ -654,7 +663,8 @@ export const motifs: Motif[] = [
       "hip-shop",
       "welcome-to-the-green-room",
       "dump",
-      "tv-world"
+      "tv-world",
+      "kris-piano-waitingroom"
     ]
   },
   {
@@ -675,6 +685,7 @@ export const motifs: Motif[] = [
     songs: [
       "quiet-autumn",
       "scarlet-forest",
+      "chapter-5-man"
     ]
   },
   {
@@ -766,4 +777,55 @@ export const motifs: Motif[] = [
       "inappropriate-recycling",
     ]
   },
+  {
+    id: "kris",
+    name: "Kris",
+    color: "#999999",
+    source: "kris-piano-sevenfour",
+    songs: [
+      "kris-piano-sevenfour"
+    ]
+  },
+  {
+    id: "dating",
+    name: "Dating",
+    color: "#e73bab",
+    source: "dating-start",
+    songs: [
+      "dating-start",
+      "catfession",
+      "bratfession"
+    ]
+  },
+  {
+    id: "uwa",
+    name: "Uwa!",
+    color: "#3eb0e0",
+    source: "uwa-so-temperate",
+    songs: [
+      "uwa-so-temperate",
+      "glowing-snow",
+    ]
+  },
+  {
+    id: "sans",
+    name: "Sans (motif)",
+    color: "#2974bf",
+    source: "sans",
+    songs: [
+      "sans",
+      "its-raining-somewhere-else",
+    ]
+  },
+  {
+    id: "rain",
+    name: "Rain",
+    color: "#182960",
+    source: "its-raining-somewhere-else",
+    songs: [
+      "its-raining-somewhere-else",
+      "the-place-where-it-rained",
+    ]
+  },
+
 ]
