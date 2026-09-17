@@ -52,7 +52,9 @@ export const motifs: Motif[] = [
       "ever-higher",
       "from-now-on",
       "guardian",
-      "crumbling-tower"
+      "crumbling-tower",
+      "kris-piano-prophecy",
+      "happy-town"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=YLeid-bIRQA",
@@ -124,7 +126,8 @@ export const motifs: Motif[] = [
     songs: [
       "a-town-called-hometown",
       "another-day-in-hometown",
-      "school"
+      "school",
+      "happy-town"
     ]
   },
   {
@@ -143,7 +146,8 @@ export const motifs: Motif[] = [
       "the-legend?",
       "a-dark-zone",
       "the-third-sanctuary",
-      "4rd-sanctuary"
+      "4rd-sanctuary",
+      "kris-piano-last-prophecy"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=PibYmujLubI",
@@ -318,6 +322,16 @@ export const motifs: Motif[] = [
       "atrium",
       "before-the-story",
       "the-holy"
+    ]
+  },
+  {
+    id: "flashback",
+    name: "Flashback",
+    color: "#30d4ae",
+    source: "flashback-excerpt",
+    songs: [
+      "flashback-excerpt",
+      "northernlight"
     ]
   },
   {
@@ -710,6 +724,16 @@ export const motifs: Motif[] = [
     songs: [
       "ruder-buster",
       "catswing",
+    ]
+  },
+  {
+    id: "checker-dance",
+    name: "Checker Dance (motif)",
+    color: "#eb0b65",
+    source: "checker-dance",
+    songs: [
+      "checker-dance",
+      "inappropriate-recycling",
     ]
   },
 ]
