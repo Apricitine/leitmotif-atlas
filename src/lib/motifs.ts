@@ -1,8 +1,6 @@
 import { songs } from "$lib/songs"
 
 export type MotifClip = {
-  // Paste the YouTube link and the motif's exact section here. Times are seconds.
-  // Example: { youtubeUrl: "https://youtu.be/VIDEO_ID", startSeconds: 80, endSeconds: 108 }
   youtubeUrl: string
   startSeconds: number
   endSeconds: number
