@@ -53,7 +53,12 @@ export const motifs: Motif[] = [
       "from-now-on",
       "guardian",
       "crumbling-tower"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=YLeid-bIRQA",
+      startSeconds: 0,
+      endSeconds: 51,
+    },
   },
   {
     id: "once-upon-a-time",

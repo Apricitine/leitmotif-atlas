@@ -982,8 +982,7 @@
         <section class="audio-card" aria-label={`${motif.name} audio clip`}>
           <div class="audio-card-heading">
             <div>
-              <p class="eyebrow">MOTIF CLIP</p>
-              <strong>YouTube audio clip</strong>
+              <strong>Motif soundbite</strong>
             </div>
             <span class="clip-range">{formatTimestamp(clip.startSeconds)}–{formatTimestamp(clip.endSeconds)}</span>
           </div>
