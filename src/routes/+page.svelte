@@ -144,7 +144,7 @@
   let svgEl: SVGSVGElement
   let physicsWorker: Worker | undefined
   let zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> | undefined
-  let searchInput: HTMLInputElement | undefined
+  let searchInput = $state<HTMLInputElement | undefined>(undefined)
   let youtubeHost: HTMLDivElement
   let youtubePlayer: YouTubePlayer | undefined
   let youtubeApiPromise: Promise<YouTubeApi> | undefined
@@ -169,6 +169,7 @@
   let activeCatalog = $state<Catalog>("motifs")
   let catalogQuery = $state("")
   let panelContent = $state<PanelContent>(null)
+  let explorerMinimized = $state(false)
   let clipPlaybackError = $state<string | null>(null)
   let activeClipMotifId = $state<string | null>(null)
   let isClipPlaying = $state(false)
@@ -614,6 +615,7 @@
   }
 
   function openSong(node: GraphNode) {
+    explorerMinimized = false
     pauseClip()
     clearTrace()
     selectedSongId = node.id
@@ -622,6 +624,7 @@
   }
 
   function openMotif(motif: Motif) {
+    explorerMinimized = false
     if (activeClipMotifId !== motif.id) pauseClip()
     clearTrace()
     selectedMotifId = motif.id
@@ -656,6 +659,7 @@
   }
 
   function beginTrace() {
+    explorerMinimized = false
     activeCatalog = "songs"
     catalogQuery = ""
     traceMode = true
@@ -755,7 +759,8 @@
   function handleGlobalKeydown(event: KeyboardEvent) {
     if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "k") {
       event.preventDefault()
-      searchInput?.focus()
+      explorerMinimized = false
+      requestAnimationFrame(() => searchInput?.focus())
     }
     if (event.key === "Escape") {
       if (document.activeElement === searchInput) {
@@ -788,22 +793,47 @@
 <svelte:window onkeydown={handleGlobalKeydown} />
 
 <div class="atlas" class:has-selection={selectedSongId !== null || selectedMotifId !== null}>
-  <div class="control-hub" class:has-panel={panelContent !== null}>
-    <header>
-      <p class="eyebrow">interactive score map</p>
-      <h1>DELTARUNE LEITMOTIF ATLAS</h1>
-      <p>See the connections between songs.</p>
-    </header>
+  <header>
+    <p class="eyebrow">interactive score map</p>
+    <h1>DELTARUNE LEITMOTIF ATLAS</h1>
+    <p>See the connections between songs.</p>
+  </header>
 
-  <section class="catalog" aria-label="Atlas explorer">
+  <div
+    class="control-hub"
+    class:has-panel={panelContent !== null}
+    class:minimized={explorerMinimized}
+  >
+    {#if explorerMinimized}
+      <button
+        class="explorer-toggle"
+        onclick={() => (explorerMinimized = false)}
+        aria-expanded="false"
+        aria-controls="atlas-explorer"
+      >
+        <span aria-hidden="true">+</span>
+        Explore
+      </button>
+    {/if}
+
+  {#if !explorerMinimized}
+  <section id="atlas-explorer" class="catalog" aria-label="Atlas explorer">
     <div class="catalog-heading">
       <div>
         <p class="eyebrow">EXPLORE</p>
         <h2>{activeCatalog === "motifs" ? "Motifs" : "Songs"}</h2>
       </div>
-      {#if selectedSongId || selectedMotifId}
-        <button class="clear-focus" onclick={clearSelection}>Clear</button>
-      {/if}
+      <div class="catalog-actions">
+        {#if selectedSongId || selectedMotifId}
+          <button class="clear-focus" onclick={clearSelection}>Clear</button>
+        {/if}
+        <button
+          class="catalog-minimize"
+          onclick={() => (explorerMinimized = true)}
+          aria-label="Minimize explorer"
+          title="Minimize explorer"
+        >−</button>
+      </div>
     </div>
 
     <div class="catalog-tabs" role="tablist" aria-label="Explorer type">
@@ -1036,6 +1066,7 @@
         {/each}
       {/if}
     </aside>
+  {/if}
   {/if}
   </div>
 
@@ -1278,7 +1309,7 @@
   .control-hub {
     position: absolute;
     top: 16px;
-    left: 16px;
+    right: 16px;
     z-index: 8;
     display: flex;
     width: min(278px, calc(100vw - 32px));
@@ -1292,7 +1323,34 @@
     pointer-events: auto;
   }
 
+  .explorer-toggle {
+    display: inline-flex;
+    align-self: flex-end;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--panel-border-strong);
+    border-radius: 10px;
+    padding: 8px 10px;
+    background: var(--surface);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+  }
+
+  .explorer-toggle span {
+    color: #d9b7ff;
+    font-size: 15px;
+    line-height: 0.75;
+  }
+
   header {
+    position: absolute;
+    top: 19px;
+    left: 20px;
+    z-index: 8;
     max-width: 270px;
     padding: 3px 4px 6px;
     animation: fade-up 480ms both cubic-bezier(0.22, 1, 0.36, 1);
@@ -1357,6 +1415,12 @@
     letter-spacing: -0.02em;
   }
 
+  .catalog-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
   .clear-focus {
     border: 0;
     border-radius: 8px;
@@ -1369,7 +1433,25 @@
     transition: color 160ms ease, background 160ms ease;
   }
 
-  .clear-focus:hover {
+  .catalog-minimize {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    place-items: center;
+    border: 0;
+    border-radius: 7px;
+    padding: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+  }
+
+  .clear-focus:hover,
+  .catalog-minimize:hover,
+  .explorer-toggle:hover {
     background: rgba(241, 238, 249, 0.07);
     color: var(--text);
   }
@@ -2017,7 +2099,7 @@
   @keyframes panel-in {
     from {
       opacity: 0;
-      transform: translateX(-10px) scale(0.98);
+      transform: translateX(10px) scale(0.98);
     }
     to {
       opacity: 1;
@@ -2045,13 +2127,16 @@
 
   @media (max-width: 760px) {
     .control-hub {
-      top: 10px;
-      left: 10px;
+      top: auto;
+      right: 10px;
+      bottom: 10px;
       width: min(274px, calc(100vw - 20px));
       gap: 7px;
     }
 
     header {
+      top: 12px;
+      left: 13px;
       max-width: 250px;
       padding: 2px 3px;
     }

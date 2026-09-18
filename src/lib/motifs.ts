@@ -89,7 +89,8 @@ export const motifs: Motif[] = [
       "the-door",
       "the-world-revolving",
       "black-knife",
-      "that-day"
+      "that-day",
+      "chapter-5-inversion-lake-chant"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=hWWVWfQW1H4",
@@ -187,7 +188,12 @@ export const motifs: Motif[] = [
       "a-real-boy",
       "catswing",
       "hall-of-fame"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=vGn0HeIjEbg",
+      startSeconds: 30,
+      endSeconds: 36,
+    },
   },
   {
     id: "lost-girl",
@@ -222,8 +228,14 @@ export const motifs: Motif[] = [
       "walking-home",
       "i-guess-im-in-love",
       "festival",
-      "the-diner-song-of-best-friends"
-    ]
+      "the-diner-song-of-best-friends",
+      "chapter-5-inversion-lake-chant"
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=T6UfG77Bwpo",
+      startSeconds: 0,
+      endSeconds: 17,
+    }
   },
   {
     id: "gaster",
@@ -426,7 +438,8 @@ export const motifs: Motif[] = [
       "vs-lancer",
       "card-castle",
       "its-pronounced-rules",
-      "kris-piano-lancer-waltz"
+      "kris-piano-lancer-waltz",
+      "lancer-annoying"
 
     ]
   },
@@ -467,7 +480,8 @@ export const motifs: Motif[] = [
       "giga-size",
       "elegant-entrance",
       "smart-race",
-      "catswing"
+      "catswing",
+      "knock-you-down-rhythm-ver"
     ]
   },
   {
@@ -480,7 +494,8 @@ export const motifs: Motif[] = [
       "smart-race",
       "bluebird-of-misfortune",
       "attack-of-the-killer-queen",
-      "knock-you-down"
+      "knock-you-down",
+      "knock-you-down-rhythm-ver"
     ]
   },
   {
@@ -570,6 +585,7 @@ export const motifs: Motif[] = [
     songs: [
       "black-knife",
       "burning-eyes",
+
     ]
   },
   {
@@ -827,5 +843,15 @@ export const motifs: Motif[] = [
       "the-place-where-it-rained",
     ]
   },
-
+  {
+    id: "man",
+    name: "Man",
+    color: "#280b1a",
+    source: "man",
+    songs: [
+      "man",
+      "man-2",
+      "man-nes"
+    ]
+  }
 ]
