@@ -101,7 +101,7 @@ function initialize({ width, height, nodes: initialNodes, links }: InitializeMes
     .on("tick", publishPositions)
     .on("end", settleHomes)
 
-  // forceSimulation assigns its initial phyllotaxis positions synchronously.
+  // forceSimulation assigns its initial phyllotaxis positions synchronously
   // Sending them now lets the main thread render the same initial graph state.
   publishPositions(true)
 }

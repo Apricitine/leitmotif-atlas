@@ -8,8 +8,7 @@ import {
 export type GraphPoint = { x: number; y: number }
 type Coordinate = [number, number]
 
-// The curve configuration is constant. Reusing the generator avoids creating a
-// new d3 object for every motif on every simulation frame.
+// generic generator for all blobs
 const closedBlobLine = line<Coordinate>().curve(
   curveCatmullRomClosed.alpha(0.85),
 )

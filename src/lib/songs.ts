@@ -54,6 +54,7 @@ export const songs = [
   { id: "darkness-falls", title: "Darkness Falls", chapter: 1 },
   { id: "the-holy", title: "THE HOLY", chapter: 1 },
   { id: "you-can-always-come-home", title: "You Can Always Come Home", chapter: 1 },
+  { id: "hymm", title: "Hymm", chapter: 4 },
 
   { id: "girl-next-door", title: "Girl Next Door", chapter: 2 },
   { id: "ohhhhohohoho", title: "Ohhhhohohoho!", chapter: 2 },
@@ -253,11 +254,10 @@ export const songs = [
   { id: "chapter-5-weird-monologue-deep", title: "ch5_weird_monologue_deep", chapter: 5, unlisted: true },
   { id: "chapter-5-inversion-lake-chant", title: "ch5_inversion_lake_chant", chapter: 5, unlisted: true },
 
-  { id: "him", title: "Gaster's Theme", chapter: 8 },
+  { id: "him", title: "him", chapter: 8 },
   { id: "determination", title: "Determination", chapter: 8 },
   { id: "asgore", title: "ASGORE", chapter: 8 },
   { id: "your-best-nightmare", title: "YOUR BEST NIGHTMARE", chapter: 8 },
-  { id: "hymm", title: "Hymm", chapter: 4 },
   { id: "power-of-neo", title: "Power of \"NEO\"", chapter: 8 },
   { id: "ruins", title: "Ruins", chapter: 8 },
   { id: "spear-of-justice", title: "Spear of Justice", chapter: 8 },

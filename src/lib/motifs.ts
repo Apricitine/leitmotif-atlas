@@ -42,7 +42,6 @@ export const motifs: Motif[] = [
       "i-guess-im-in-love",
       "the-diner-song-of-best-friends",
       "with-hope-crossed-on-our-hearts",
-      "hymm",
       "piano-that-may-not-be-played-that-well",
       "flower-man",
       "running-sky",
@@ -54,12 +53,31 @@ export const motifs: Motif[] = [
       "guardian",
       "crumbling-tower",
       "kris-piano-prophecy",
-      "happy-town"
+      "happy-town",
+      "field-of-hopes-and-dreams-credits-version",
+      "hymm"
     ],
     clip: {
       youtubeUrl: "https://www.youtube.com/watch?v=YLeid-bIRQA",
       startSeconds: 0,
       endSeconds: 51,
+    },
+  },
+  {
+    id: "hopes-and-dreams",
+    name: "Hopes and Dreams",
+    color: "#b428a2",
+    source: "field-of-hopes-and-dreams",
+    songs: [
+      "field-of-hopes-and-dreams",
+      "garden-of-hopes-and-dreams",
+      "scarlet-forest",
+      "field-of-hopes-and-dreams-credits-version"
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=ymNgfwgh1TU",
+      startSeconds: 46,
+      endSeconds: 53,
     },
   },
   {
@@ -243,11 +261,17 @@ export const motifs: Motif[] = [
     color: "#000000",
     source: "him",
     songs: [
+      "him",
       "lost-girl",
       "another-him",
       "darkness-falls",
       "the-world-revolving",
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=IsOYJPZpHbw",
+      startSeconds: 0,
+      endSeconds: 4.2,
+    }
   },
   {
     id: "determination",
@@ -316,7 +340,8 @@ export const motifs: Motif[] = [
       "sword",
       "query",
       "and-now-for-todays-sponsors",
-      "king-of-rolypoly"
+      "king-of-rolypoly",
+      "kris-piano-quiz"
     ]
   },
   {
@@ -485,6 +510,17 @@ export const motifs: Motif[] = [
     ]
   },
   {
+    id: "powers-combined",
+    name: "Powers Combined",
+    color: "#0077ff",
+    source: "powers-combined",
+    songs: [
+      "powers-combined",
+      "knock-you-down",
+      "knock-you-down-rhythm-ver"
+    ]
+  },
+  {
     id: "berdly",
     name: "Berdly",
     color: "#0099ff",
@@ -608,7 +644,8 @@ export const motifs: Motif[] = [
       "ghost-fight",
       "chill-jailbreak-alarm-to-study-and-relax-to",
       "the-ol-jitterbug",
-      "dummy"
+      "dummy",
+      "jitterbug-muffled"
     ]
   },
   {
@@ -667,7 +704,8 @@ export const motifs: Motif[] = [
     source: "a-cybers-world",
     songs: [
       "a-cybers-world",
-      "welcome-to-the-city"
+      "welcome-to-the-city",
+      "cybercity-alt"
     ]
   },
   {
@@ -852,6 +890,16 @@ export const motifs: Motif[] = [
       "man",
       "man-2",
       "man-nes"
+    ]
+  },
+  {
+    id: "pink-shop",
+    name: "Pink's Shop",
+    color: "#ff87af",
+    source: "shop-3",
+    songs: [
+      "shop-3",
+      "kris-piano-shop"
     ]
   }
 ]
