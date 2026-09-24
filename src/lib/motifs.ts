@@ -190,7 +190,12 @@ export const motifs: Motif[] = [
       "guardian",
       "crumbling-tower",
       "neverending-night"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=QQQq1T06lYg",
+      startSeconds: 0,
+      endSeconds: 7.5,
+    },
   },
   {
     id: "tv-time",
@@ -279,13 +284,19 @@ export const motifs: Motif[] = [
     color: "#ff0022",
     source: "determination",
     songs: [
+      "determination",
       "darkness-falls",
       "faint-courage",
       "rude-buster",
       "lantern",
       "asgore",
       "vapor-buster"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=h1wSPmlZV-w",
+      startSeconds: 0,
+      endSeconds: 12.4,
+    },
   },
   {
     id: "asgore",
@@ -342,7 +353,12 @@ export const motifs: Motif[] = [
       "and-now-for-todays-sponsors",
       "king-of-rolypoly",
       "kris-piano-quiz"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=_iQ6fgFcPwM",
+      startSeconds: 0,
+      endSeconds: 10,
+    }
   },
   {
     id: "big-shot",
@@ -353,7 +369,12 @@ export const motifs: Motif[] = [
       "nows-your-chance-to-be-a",
       "catswing",
       "big-shot"
-    ]
+    ],
+    clip: {
+      youtubeUrl: "https://www.youtube.com/watch?v=V31PVkwzpEY",
+      startSeconds: 0,
+      endSeconds: 7,
+    }
   },
   {
     id: "the-holy",
